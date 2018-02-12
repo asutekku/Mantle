@@ -21,7 +21,7 @@ public class MantleMain extends Application {
             Parent root = splashScreen.getRoot();
 
             Scene scene = new Scene(root);
-            //scene.getStylesheets().add(getClass().getResource("rsc/bootstrap3.css").toExternalForm());
+            //scene.getStylesheets().add(getClass().getResource("resources/bootstrap3.css").toExternalForm());
 
             stage.setScene(scene);
             stage.show();

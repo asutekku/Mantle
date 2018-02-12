@@ -17,7 +17,7 @@
       </Label>
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="127.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../rsc/iconLarge.png" />
+            <Image url="@../resources/iconLarge.png" />
          </image>
       </ImageView>
       <Label layoutX="61.0" layoutY="243.0" text="A tool to organize your messy resource library" textAlignment="CENTER" />
