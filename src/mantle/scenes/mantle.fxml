@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane fx:id="BProot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-border-radius: 30; -fx-background-radius: 30; -fx-background-color: transparent;" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mantle.controllers.MantleController">
+    <center>
+      <VBox style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">
+         <children>
+            <BorderPane prefHeight="40.0">
+               <center>
+                        <TextField fx:id="searchBox" promptText="Search collection" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets right="5.0" />
+                     </BorderPane.margin>
+                  </TextField>
+               </center>
+               <left>
+                        <Button fx:id="importButton" mnemonicParsing="false" onAction="#importButtonAction" text="Import" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </BorderPane.margin>
+                        </Button>
+               </left>
+            </BorderPane>
+                <TableView prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn editable="false" prefWidth="75.42393493652344" text="Type" />
+                        <TableColumn editable="false" prefWidth="448.57611083984375" text="Name" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+         </children>
+      </VBox>
+    </center>
+    <left>
+        <VBox focusTraversable="true" prefWidth="180.0" style="-fx-background-color: #f2f2f2;" BorderPane.alignment="CENTER">
+            <children>
+                <MenuBar fx:id="menubar" minHeight="40.0">
+                    <menus>
+                        <Menu mnemonicParsing="false" text="File">
+                            <items>
+                                <MenuItem fx:id="menuNew" mnemonicParsing="false" onAction="#menuActionNew" text="New" />
+                                <MenuItem fx:id="menuOpen" mnemonicParsing="false" onAction="#menuActionOpen" text="Open…" />
+                                <Menu fx:id="menuRecent" mnemonicParsing="false" text="Open Recent" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem fx:id="menuClose" mnemonicParsing="false" onAction="#menuActionClose" text="Close" />
+                                <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#menuActionSave" text="Save" />
+                                <MenuItem fx:id="menuSaveas" mnemonicParsing="false" onAction="#menuActionSaveAs" text="Save As…" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#menuActionQuit" text="Quit" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Edit">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Undo" />
+                                <MenuItem mnemonicParsing="false" text="Redo" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" text="New..." />
+                                <MenuItem mnemonicParsing="false" text="Edit..." />
+                                <MenuItem mnemonicParsing="false" text="Remove..." />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" text="Select All" />
+                                <MenuItem mnemonicParsing="false" text="Unselect All" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem fx:id="aboutMantle" mnemonicParsing="false" onAction="#menuActionAbout" text="About Mantle" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+            <MenuButton mnemonicParsing="false" prefWidth="185.0" text="All Collections" textOverrun="CLIP" VBox.vgrow="ALWAYS">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Collection 1" />
+                <MenuItem mnemonicParsing="false" text="Collection 2" />
+              </items>
+            </MenuButton>
+            <ListView prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            </children>
+        </VBox>
+    </left>
+   <right>
+          <AnchorPane maxWidth="256.0" minWidth="220.0" prefWidth="256.0" style="-fx-border-color: transparent; -fx-background-color: white;" BorderPane.alignment="CENTER">
+              <children>
+                  <Label fx:id="labelDetails" alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="Details" textAlignment="CENTER" wrapText="false" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+                      <font>
+                          <Font name="System Bold" size="22.0" fx:id="x1" />
+                      </font>
+                      <textFill>
+                          <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
+                      </textFill>
+                  </Label>
+                  <ImageView fx:id="assetImage" fitHeight="160.0" fitWidth="160.0" layoutX="35.0" layoutY="47.0" pickOnBounds="true" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="45.0" />
+                  <Button fx:id="buttonPlus" layoutX="189.0" layoutY="514.0" mnemonicParsing="false" onAction="#newButtonAction" text="New" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+                  <Button fx:id="editButton" layoutX="9.0" layoutY="513.0" mnemonicParsing="false" onAction="#editButtonAction" text="Edit" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" />
+                  <GridPane layoutX="7.0" layoutY="221.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="152.0" prefWidth="218.0">
+                      <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.4449462890625" minWidth="10.0" prefWidth="74.6224365234375" />
+                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="157.69769287109375" minWidth="10.0" prefWidth="143.3775634765625" />
+                      </columnConstraints>
+                      <rowConstraints>
+                          <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      </rowConstraints>
+                      <children>
+                          <Label fx:id="labelPath" text="Path:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                          <Label fx:id="labelName" text="Name:" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
+                          <Label fx:id="labelCategory" text="Collection:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                          <Label fx:id="labelFilesize" text="File size:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                          <Label fx:id="labelType" text="Type:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                          <Label fx:id="labelTags" text="Tags:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+                          <Label fx:id="labelAuthor" text="Author:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                          <Text fill="#797979" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetName" GridPane.columnIndex="1">
+                              <GridPane.margin>
+                                  <Insets left="5.0" />
+                              </GridPane.margin>
+                          </Text>
+                          <Text fill="#797979" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetAuthor" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <GridPane.margin>
+                                  <Insets left="5.0" />
+                              </GridPane.margin>
+                          </Text>
+                          <Text fill="#797979" layoutX="79.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetPath" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <GridPane.margin>
+                                  <Insets left="5.0" />
+                              </GridPane.margin>
+                          </Text>
+                          <Text fill="#797979" layoutX="74.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetCollection" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                              <GridPane.margin>
+                                  <Insets left="5.0" />
+                              </GridPane.margin>
+                          </Text>
+                          <Text fill="#797979" layoutX="74.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetFilesize" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                              <GridPane.margin>
+                                  <Insets left="5.0" />
+                              </GridPane.margin>
+                          </Text>
+                          <Text fill="#797979" layoutX="74.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetType" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                              <GridPane.margin>
+                                  <Insets left="5.0" />
+                              </GridPane.margin>
+                          </Text>
+                          <Text fill="#797979" layoutX="74.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetTags" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                              <GridPane.margin>
+                                  <Insets left="5.0" />
+                              </GridPane.margin>
+                          </Text>
+                      </children>
+                  </GridPane>
+              </children>
+          </AnchorPane>
+   </right>
+</BorderPane>
