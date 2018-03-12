@@ -6,7 +6,6 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,6 +16,7 @@ import mantle.collection.Asset;
 import mantle.collection.Tag;
 import mantle.collection.Collection;
 import mantle.collection.HandleException;
+import mantle.util.Localization;
 
 import javafx.event.ActionEvent;
 import javafx.application.Platform;
@@ -26,14 +26,15 @@ import javafx.fxml.Initializable;
 
 import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ListChooser;
-import mantle.util.Localization;
+
 
 public class MantleController implements Initializable {
 
     private boolean editingInProcess = false;
-    private Localization locale = new Localization("en","US");
+    private Localization locale = new Localization("en", "US");
     private ResourceBundle messages = locale.getLocale();
-    private String $(String key){
+
+    private String $(String key) {
         return messages.getString(key);
     }
 
