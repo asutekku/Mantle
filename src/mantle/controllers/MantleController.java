@@ -2,6 +2,7 @@ package mantle.controllers;
 
 import java.io.File;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -21,8 +22,16 @@ import javafx.fxml.Initializable;
 
 import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ListChooser;
+import mantle.util.Localization;
 
 public class MantleController implements Initializable {
+
+    private boolean editingInProcess = false;
+    private Localization locale = new Localization("en","US");
+    private ResourceBundle messages = locale.getLocale();
+    private String $(String key){
+        return messages.getString(key);
+    }
 
     @FXML
     private MenuBar menubar;
@@ -66,8 +75,8 @@ public class MantleController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Mantle (.mnt)", "*.mnt"),
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
-        fileChooser.setTitle("Open Mantle collection");
+                new FileChooser.ExtensionFilter($("filechooserAllFiles"), "*.*"));
+        fileChooser.setTitle($("filechooserOpenCollection"));
         fileChooser.showOpenDialog(menubar.getScene().getWindow());
     }
 
@@ -78,17 +87,17 @@ public class MantleController implements Initializable {
 
     @FXML
     public void menuActionSaveAs() {
-        eventHandler.error("This menu is not working yet.");
+        eventHandler.error($("errorNotInUse"));
     }
 
     @FXML
     public void menuActionAbout(ActionEvent event) {
-        eventHandler.OpenNewWindow(event, "about", "Mantle - About", false);
+        eventHandler.OpenNewWindow(event, "about", "Mantle - " + $("About"), false);
     }
 
     @FXML
     public void menuActionClose() {
-        eventHandler.error("This menu is not working yet.");
+        eventHandler.error($("errorNotInUse"));
     }
 
     @FXML
@@ -100,22 +109,49 @@ public class MantleController implements Initializable {
     public void onSearchEnter(ActionEvent ae) {
         String searchInput = searchBox.getText();
         if (searchInput.isEmpty()) {
-            eventHandler.error("Please input something");
+            eventHandler.error($("errorInputSomething"));
         } else {
-            eventHandler.error("You wrote " + searchInput + " to the search field");
+            Object[] errorMsgArg = {searchInput};
+            MessageFormat formatter = new MessageFormat("");
+            formatter.setLocale(locale.getCurrentLocale());
+            formatter.applyPattern(messages.getString("errorSearchInput"));
+            String output = formatter.format(errorMsgArg);
+            eventHandler.error(output);
         }
 
     }
 
+    public void newAssetVisibilityToggles() {
+        editButton.setVisible(!editButton.isVisible());
+        buttonPlus.setVisible(!buttonPlus.isVisible());
+        buttonSave.setVisible(!buttonSave.isVisible());
+    }
+
     @FXML
     private void importButtonAction(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
-        fileChooser.setTitle("Import new file");
-        File file = fileChooser.showOpenDialog(menubar.getScene().getWindow());
-        if (file != null) {
-            String filepath = file.toString();
+        if (!editingInProcess) {
+            String filepath = "";
+            String fileSize;
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter($("filechooserAllFiles"), "*.*"));
+            fileChooser.setTitle($("filechooserImportTitle"));
+            File file = fileChooser.showOpenDialog(menubar.getScene().getWindow());
+            if (file != null) {
+                clearEditor();
+                filepath = file.toString();
+                if (file.length() < 1000000) {
+                    fileSize = Long.toString(file.length() / 1000) + " KB";
+                } else {
+                    fileSize = Long.toString(file.length() / 1000000) + " MB";
+                }
+                _editPath.setText(filepath);
+                _editFilesize.setText(fileSize);
+            }
+            newAssetVisibilityToggles();
+            toggleEditorVisibility();
+        } else {
+            eventHandler.error($("errorFinishBeforeAddingNew"));
         }
     }
 
@@ -123,9 +159,7 @@ public class MantleController implements Initializable {
     private void newButtonAction(ActionEvent event) {
         clearEditor();
         toggleEditorVisibility();
-        editButton.setVisible(!editButton.isVisible());
-        buttonPlus.setVisible(!buttonPlus.isVisible());
-        buttonSave.setVisible(!buttonSave.isVisible());
+        newAssetVisibilityToggles();
     }
 
     @FXML
@@ -215,14 +249,14 @@ public class MantleController implements Initializable {
             newTag.register();
             try {
                 collection.add(newAsset);
-                assetTable.getItems().add(newAsset);
+                //assetTable.getItems().add(newAsset);
             } catch (HandleException e) {
                 Dialogs.showMessageDialog("Problems with creating a new asset " + e.getMessage());
             }
             search(newAsset.getId());
             success = true;
         } else {
-            eventHandler.error("Please give the asset a name");
+            eventHandler.error($("errorGiveAssetName"));
             success = false;
         }
         return success;

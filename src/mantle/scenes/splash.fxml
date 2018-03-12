@@ -9,31 +9,40 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="splashRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mantle.controllers.SplashController">
+<BorderPane fx:id="splashRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="mantle.controllers.SplashController">
     <bottom>
         <AnchorPane prefHeight="25.0" prefWidth="50.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="splashSkipButton" layoutX="527.0" layoutY="12.0" mnemonicParsing="false" onAction="#splashSkipButtonAction" text="Skip" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                <Button fx:id="splashAboutButton" layoutX="14.0" layoutY="12.0" mnemonicParsing="false" onAction="#splashAboutButtonAction" text="About" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                <Button fx:id="splashSkipButton" layoutX="527.0" layoutY="12.0" mnemonicParsing="false"
+                        onAction="#splashSkipButtonAction" text="Skip" AnchorPane.bottomAnchor="10.0"
+                        AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0"/>
+                <Button fx:id="splashAboutButton" layoutX="14.0" layoutY="12.0" mnemonicParsing="false"
+                        onAction="#splashAboutButtonAction" text="About" AnchorPane.bottomAnchor="10.0"
+                        AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"/>
             </children>
         </AnchorPane>
     </bottom>
     <center>
         <AnchorPane BorderPane.alignment="CENTER">
             <children>
-                <TextField fx:id="splashInputField" layoutX="151.0" layoutY="244.0" maxWidth="300.0" prefWidth="300.0" />
-                <Button fx:id="splashCreateButton" layoutX="266.0" layoutY="283.0" mnemonicParsing="false" onAction="#splashCreateButtonAction" styleClass="label" text="Create" textAlignment="CENTER" />
-                <ImageView fitHeight="64.0" fitWidth="64.0" layoutX="269.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
+                <TextField fx:id="splashInputField" layoutX="151.0" layoutY="244.0" maxWidth="300.0" prefWidth="300.0"/>
+                <Button fx:id="splashCreateButton" layoutX="266.0" layoutY="283.0" mnemonicParsing="false"
+                        onAction="#splashCreateButtonAction" styleClass="label" text="Create" textAlignment="CENTER"/>
+                <ImageView fitHeight="64.0" fitWidth="64.0" layoutX="269.0" layoutY="30.0" pickOnBounds="true"
+                           preserveRatio="true">
                     <image>
-                        <Image url="@../resources/iconLarge.png" />
+                        <Image url="@../resources/iconLarge.png"/>
                     </image>
                 </ImageView>
                 <Label layoutX="177.0" layoutY="122.0" text="Welcome to Mantle">
                     <font>
-                        <Font size="27.0" />
+                        <Font size="27.0"/>
                     </font>
                 </Label>
-                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="209.0" layoutY="170.0" prefHeight="55.0" prefWidth="181.0" text="To create your first collection, give it a name below." textAlignment="CENTER" textOverrun="CLIP" wrapText="true" />
+                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="209.0" layoutY="170.0" prefHeight="55.0"
+                       prefWidth="181.0" text="%welcomeText" textAlignment="CENTER" textOverrun="CLIP" wrapText="true"/>
             </children>
         </AnchorPane>
     </center>

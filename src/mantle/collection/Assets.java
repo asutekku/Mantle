@@ -64,7 +64,7 @@ public class Assets {
     }
 
     public void readFromFile(String path) throws HandleException {
-        filename = path + "/assets.mtn";
+        filename = path + "/assets.mcl";
         throw new HandleException("Ei osata viel� lukea tiedostoa " + filename);
     }
 
