@@ -7,15 +7,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Preferences {
-    private String filename = "mantle.ini";
-    private Pattern _keyValue = Pattern.compile("\\s*([^=]*)=(.*)");
-    private Map<String, String> _entries = new HashMap<>();
+    /**
+     * Mantle Preference File = .mpf
+     * Looks like ini
+     * Behaves like ini
+     * Smells like ini
+     *
+     * But is mpf
+     */
+    private static String filename = "mantle.mpf";
+    private static Pattern _keyValue = Pattern.compile("\\s*([^=]*)=(.*)");
+    private static Map<String, String> _entries = new HashMap<>();
 
     public Preferences(String path) throws IOException {
         load(path);
     }
 
-    public void load(String path) throws IOException {
+    public static void load(String path) {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -23,6 +31,7 @@ public class Preferences {
                 if (matcher.matches()) {
                     String key = matcher.group(1).trim();
                     String value = matcher.group(2).trim();
+                    System.out.println("Map contains: " + key + " and " + value);
                     _entries.put(key, value);
                 }
             }
@@ -31,7 +40,7 @@ public class Preferences {
         }
     }
 
-    public void save(String path) {
+    public static void save(String path) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path))) {
             String line;
             for (Map.Entry<String, String> entry : _entries.entrySet()){
@@ -43,5 +52,10 @@ public class Preferences {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args){
+        load(filename);
+        save(filename);
     }
 }

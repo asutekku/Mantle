@@ -4,7 +4,7 @@ package mantle.collection;
  * Tags
  */
 public class Tags {
-    private static final int max_tags = 512;
+    private static final int max_tags = 16;
     private int count = 0;
     private Tag tags[] = new Tag[max_tags];
 

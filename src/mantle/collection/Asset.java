@@ -10,7 +10,6 @@ import java.io.*;
  */
 public class Asset {
     private int idNumber;
-    private int tagCount = 0;
     private String filepath;
     private String filename;
     private String author;

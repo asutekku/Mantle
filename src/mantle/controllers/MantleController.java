@@ -1,7 +1,6 @@
 package mantle.controllers;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -12,10 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import mantle.collection.Asset;
-import mantle.collection.Tag;
-import mantle.collection.Collection;
-import mantle.collection.HandleException;
+import mantle.collection.*;
 import mantle.util.Localization;
 
 import javafx.event.ActionEvent;
@@ -24,7 +20,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.fxml.Initializable;
 
-import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ListChooser;
 
 
@@ -99,7 +94,7 @@ public class MantleController implements Initializable {
 
     @FXML
     public void menuActionAbout(ActionEvent event) {
-        eventHandler.OpenNewWindow(event, "about", "Mantle - " + $("About"), false);
+        eventHandler.OpenNewWindow(event, "about", "Mantle - " + $("about"), false);
     }
 
     @FXML
@@ -137,7 +132,7 @@ public class MantleController implements Initializable {
     @FXML
     private void importButtonAction(ActionEvent event) {
         if (!editingInProcess) {
-            String filepath = "";
+            String filepath;
             String fileSize;
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().addAll(
@@ -147,19 +142,25 @@ public class MantleController implements Initializable {
             if (file != null) {
                 clearEditor();
                 filepath = file.toURI().toString();
-                if (file.length() < 1000000) {
-                    fileSize = Long.toString(file.length() / 1000) + " KB";
-                } else {
-                    fileSize = Long.toString(file.length() / 1000000) + " MB";
-                }
+                fileSize = file.length() < 1000000 ?
+                        Long.toString(file.length() / 1000) + " KB" :
+                        Long.toString(file.length() / 1000000) + " MB";
                 _editPath.setText(filepath);
                 _editFilesize.setText(fileSize);
+                setImage(assetImage,filepath);
+
             }
             newAssetVisibilityToggles();
             toggleEditorVisibility();
         } else {
             eventHandler.error($("errorFinishBeforeAddingNew"));
         }
+    }
+
+    public void setImage(ImageView imgview, String path){
+        Image image = new Image(path);
+        imgview.setImage(image);
+        imgview.fitWidthProperty();
     }
 
     @FXML
@@ -230,7 +231,9 @@ public class MantleController implements Initializable {
     protected void showAsset() {
         Asset asset = chooserAssets.getSelectedObject();
         Tag taglist = asset.getTags(0);
-        if (asset == null) return;
+        if (asset == null) {
+            return;
+        }
         _assetName.setText(asset.getName());
         _assetAuthor.setText(asset.getAuthor());
         _assetCollection.setText(asset.getCategory());
@@ -239,10 +242,8 @@ public class MantleController implements Initializable {
         _assetTags.setText(taglist.toString());
         _assetType.setText(asset.getType());
         try {
-            Image image = new Image(asset.getPath());
-            assetImage.setImage(image);
+            setImage(assetImage,asset.getPath());
         } finally {
-            System.out.println(asset.getPath());
             System.out.println("whoops");
         }
     }
@@ -265,7 +266,7 @@ public class MantleController implements Initializable {
                 collection.add(newAsset);
                 //assetTable.getItems().add(newAsset);
             } catch (HandleException e) {
-                Dialogs.showMessageDialog("Problems with creating a new asset " + e.getMessage());
+                eventHandler.error("Problems with creating a new asset " + e.getMessage());
             }
             search(newAsset.getId());
             success = true;

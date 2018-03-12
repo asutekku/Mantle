@@ -65,11 +65,11 @@ public class Assets {
 
     public void readFromFile(String path) throws HandleException {
         filename = path + "/assets.mcl";
-        throw new HandleException("Ei osata viel� lukea tiedostoa " + filename);
+        throw new HandleException("Can't read from file: " + filename);
     }
 
     public void save() throws HandleException {
-        throw new HandleException("Ei osata viel� tallettaa tiedostoa " + filename);
+        throw new HandleException("Can't save to file: " + filename);
     }
 
 
