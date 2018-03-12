@@ -10,16 +10,16 @@
 <?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="splashRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="mantle.controllers.SplashController">
+            prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="mantle.controllers.SplashController">
     <bottom>
         <AnchorPane prefHeight="25.0" prefWidth="50.0" BorderPane.alignment="CENTER">
             <children>
                 <Button fx:id="splashSkipButton" layoutX="527.0" layoutY="12.0" mnemonicParsing="false"
-                        onAction="#splashSkipButtonAction" text="Skip" AnchorPane.bottomAnchor="10.0"
+                        onAction="#splashSkipButtonAction" text="%skip" AnchorPane.bottomAnchor="10.0"
                         AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0"/>
                 <Button fx:id="splashAboutButton" layoutX="14.0" layoutY="12.0" mnemonicParsing="false"
-                        onAction="#splashAboutButtonAction" text="About" AnchorPane.bottomAnchor="10.0"
+                        onAction="#splashAboutButtonAction" text="%about" AnchorPane.bottomAnchor="10.0"
                         AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"/>
             </children>
         </AnchorPane>
@@ -29,14 +29,15 @@
             <children>
                 <TextField fx:id="splashInputField" layoutX="151.0" layoutY="244.0" maxWidth="300.0" prefWidth="300.0"/>
                 <Button fx:id="splashCreateButton" layoutX="266.0" layoutY="283.0" mnemonicParsing="false"
-                        onAction="#splashCreateButtonAction" styleClass="label" text="Create" textAlignment="CENTER"/>
+                        onAction="#splashCreateButtonAction" styleClass="label" text="%splashCreate"
+                        textAlignment="CENTER"/>
                 <ImageView fitHeight="64.0" fitWidth="64.0" layoutX="269.0" layoutY="30.0" pickOnBounds="true"
                            preserveRatio="true">
                     <image>
                         <Image url="@../resources/iconLarge.png"/>
                     </image>
                 </ImageView>
-                <Label layoutX="177.0" layoutY="122.0" text="Welcome to Mantle">
+                <Label layoutX="177.0" layoutY="122.0" text="%welcomeMessage">
                     <font>
                         <Font size="27.0"/>
                     </font>

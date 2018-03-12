@@ -8,8 +8,14 @@ import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.event.*;
 import javafx.scene.layout.Pane;
+import mantle.util.Localization;
+
+import java.util.ResourceBundle;
 
 public class eventHandler {
+
+    private static Localization local = new Localization();
+    private static ResourceBundle bundle = local.getLocale();
 
     /**
      * This method allows to return a customizable error string
@@ -60,7 +66,7 @@ public class eventHandler {
      */
     public static void changeScene(ActionEvent event, String sceneName) {
         try {
-            Parent root = FXMLLoader.load(eventHandler.class.getClassLoader().getResource("mantle/scenes/" + sceneName + ".fxml"));
+            Parent root = FXMLLoader.load(eventHandler.class.getClassLoader().getResource("mantle/scenes/" + sceneName + ".fxml"),bundle);
             Scene newScene = new Scene(root);
             Stage originalScene = (Stage) ((Node) event.getSource()).getScene().getWindow();
             originalScene.setScene(newScene);
@@ -81,7 +87,7 @@ public class eventHandler {
     public static void OpenNewWindow(ActionEvent event, String windowName, String windowTitle, boolean hideOldWindow) {
         Parent root;
         try {
-            root = FXMLLoader.load(eventHandler.class.getClassLoader().getResource("mantle/scenes/" + windowName + ".fxml"));
+            root = FXMLLoader.load(eventHandler.class.getClassLoader().getResource("mantle/scenes/" + windowName + ".fxml"),bundle);
             Stage stage = new Stage();
             stage.setTitle(windowTitle);
             stage.setScene(new Scene(root));

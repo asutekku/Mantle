@@ -1,11 +1,15 @@
 package mantle.controllers;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -44,6 +48,8 @@ public class MantleController implements Initializable {
     private TableView<Asset> assetTable;
     @FXML
     TableColumn<Asset, String> columnType, columnName, columnPath;
+    @FXML
+    private ImageView assetImage;
 
     private String CollectionName = "Sample";
 
@@ -139,7 +145,7 @@ public class MantleController implements Initializable {
             File file = fileChooser.showOpenDialog(menubar.getScene().getWindow());
             if (file != null) {
                 clearEditor();
-                filepath = file.toString();
+                filepath = file.toURI().toString();
                 if (file.length() < 1000000) {
                     fileSize = Long.toString(file.length() / 1000) + " KB";
                 } else {
@@ -231,6 +237,13 @@ public class MantleController implements Initializable {
         _assetFilesize.setText(asset.getSize());
         _assetTags.setText(taglist.toString());
         _assetType.setText(asset.getType());
+        try {
+            Image image = new Image(asset.getPath());
+            assetImage.setImage(image);
+        } finally {
+            System.out.println(asset.getPath());
+            System.out.println("whoops");
+        }
     }
 
     protected boolean newAsset() throws HandleException {

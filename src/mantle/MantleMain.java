@@ -16,7 +16,7 @@ public class MantleMain extends Application {
         try {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
 
-            Localization local = new Localization();
+            Localization local = new Localization("fi", "FI");
             ResourceBundle bundle = local.getLocale();
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("scenes/splash.fxml"), bundle);
             final Pane root = loader.load();
