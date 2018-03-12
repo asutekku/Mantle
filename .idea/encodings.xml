@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/src/mantle/MantleMain.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/mantle/collection/Asset.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/mantle/collection/Assets.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/mantle/collection/Collection.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/mantle/collection/HandleException.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/mantle/controllers/MantleController.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/mantle/controllers/SplashController.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/mantle/controllers/eventHandler.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/mantle/db/HetuTarkistus.java" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
 </project>
-
