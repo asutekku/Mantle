@@ -159,7 +159,6 @@ public class MantleController implements Initializable {
         String filepath;
         String fileSize;
         if (file != null) {
-            clearEditor();
             filepath = fileHelper.getPath(file);
             fileSize = fileHelper.getSize(file);
             _editPath.setText(filepath);
@@ -190,23 +189,38 @@ public class MantleController implements Initializable {
     @FXML
     private void newButtonAction(ActionEvent event) {
         clearEditor();
+        editingInProcess = false;
+        additionInProcess = true;
         toggleEditorVisibility();
         newAssetVisibilityToggles();
     }
 
     @FXML
     private void saveButtonAction(ActionEvent event) throws HandleException {
-        if (newAsset()) {
+        if (additionInProcess && !editingInProcess) {
+            if (newAsset()) {
+                toggleEditorVisibility();
+                editorbuttonEdit.setVisible(!editorbuttonEdit.isVisible());
+                editorbuttonNew.setVisible(!editorbuttonNew.isVisible());
+                editorbuttonSave.setVisible(!editorbuttonSave.isVisible());
+            }
+        } else if (!additionInProcess && editingInProcess) {
+            Asset asset = chooserAssets.getSelectedObject();
+            updateAsset(asset);
             toggleEditorVisibility();
             editorbuttonEdit.setVisible(!editorbuttonEdit.isVisible());
             editorbuttonNew.setVisible(!editorbuttonNew.isVisible());
             editorbuttonSave.setVisible(!editorbuttonSave.isVisible());
+            showAsset();
         }
+
     }
 
     @FXML
     private void editButtonAction(ActionEvent event) {
         toggleEditorVisibility();
+        editingInProcess = true;
+        additionInProcess = false;
         editorbuttonEdit.setVisible(!editorbuttonEdit.isVisible());
         editorbuttonNew.setVisible(!editorbuttonNew.isVisible());
         editorbuttonSave.setVisible(!editorbuttonSave.isVisible());
@@ -255,21 +269,52 @@ public class MantleController implements Initializable {
         _assetFilesize.setText(asset.getSize());
         _assetTags.setText(taglist.toString());
         _assetType.setText(asset.getCategory().toString());
-        try {
-            setImage(assetImage, asset.getPath());
-        } finally {
-            setImage(assetImage, null);
+        setImage(assetImage, asset.getPath());
+    }
+
+    protected void updateAsset(Asset asset) throws HandleException {
+        //String errorStyle = "-fx-border-color: red ; -fx-border-width: 2px ;";
+        Category assetCat;
+        String assetName = _editName.getText(),
+                assetPath = _editPath.getText(),
+                assetAuthor = _editAuthor.getText(),
+                assetType = _assetCollection.getText(),
+                assetSize = _assetFilesize.getText();
+        asset.setFilename(assetName);
+        asset.setFilepath(assetPath);
+        asset.setAuthor(assetAuthor);
+        asset.setSize(assetSize);
+        Tag tags = new Tag(_editTags.getText());
+        tags.setAssetID(asset.getId());
+        tags.register();
+        asset.setTag(tags);
+        for (int i = 0; i < assetCategories.getCategoryArray().length; i++) {
+            if (assetCategories.getCategoryArray()[i].toString() == editCategoryCombo.getValue()) {
+                assetCat = assetCategories.getCategoryArray()[i];
+            } else {
+                assetCat = assetCategories.getCategoryArray()[0];
+            }
         }
     }
 
     protected boolean newAsset() throws HandleException {
         boolean success = false;
+        String errorStyle = "-fx-border-color: red ; -fx-border-width: 2px ;";
         Category assetCat = null;
         String assetName = _editName.getText(),
                 assetPath = _editPath.getText(),
                 assetAuthor = _editAuthor.getText(),
                 assetType = _assetCollection.getText(),
-                assetSize = _editFilesize.getText();
+                assetSize = _assetFilesize.getText();
+        if (assetName == null || assetName.isEmpty()) {
+            _editName.setStyle(errorStyle);
+        }
+        if (assetPath == null || assetPath.isEmpty()) {
+            _editPath.setStyle(errorStyle);
+        }
+        if (assetAuthor == null || assetAuthor.isEmpty()) {
+            _editAuthor.setStyle(errorStyle);
+        }
         if (assetName != null && !assetName.isEmpty()) {
             Tag newTag = new Tag(_editTags.getText());
             for (int i = 0; i < assetCategories.getCategoryArray().length; i++) {
@@ -281,7 +326,6 @@ public class MantleController implements Initializable {
                 }
             }
             Asset newAsset = new Asset(assetName, assetPath, assetAuthor, assetCat, newTag, assetSize);
-            System.out.println(newAsset.getCategory().toString());
             newTag.setAssetID(newAsset.getId());
             newAsset.register();
             newTag.register();
@@ -289,6 +333,7 @@ public class MantleController implements Initializable {
                 collection.add(newAsset);
             } catch (HandleException e) {
                 eventHandler.error("Problems with creating a new asset " + e.getMessage());
+                success = false;
             }
             search(newAsset.getId());
             success = true;
@@ -305,7 +350,7 @@ public class MantleController implements Initializable {
         _editPath.setText("");
         _editCategory.setText("");
         _editFilesize.setText("");
-        //_editType.setText("");
+        _assetFilesize.setText("");
         _editTags.setText("");
         assetImage.setImage(null);
     }

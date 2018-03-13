@@ -48,11 +48,11 @@
                         <Insets bottom="5.0" top="5.0" />
                     </VBox.margin>
                 </BorderPane>
-                <ListChooser fx:id="chooserAssets" prefHeight="400.0" prefWidth="558.0" rivit="asset 1&#10;asset 2&#10;asset 3&#10;asset 4&#10;asset 5&#10;" VBox.vgrow="ALWAYS">
+                <ListChooser fx:id="chooserAssets" prefWidth="564.0" rivit="asset 1&#10;asset 2&#10;asset 3&#10;asset 4&#10;asset 5&#10;" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets />
                </VBox.margin></ListChooser>
-                <TableView fx:id="assetTable" cacheShape="false" disable="true" prefWidth="200.0" visible="false" VBox.vgrow="ALWAYS">
+                <TableView fx:id="assetTable" cacheShape="false" disable="true" prefHeight="0.0" prefWidth="200.0" visible="false" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="columnType" editable="false" prefWidth="41.81651306152344" text="%category" />
                         <TableColumn fx:id="columnName" editable="false" prefWidth="520.6835021972656" text="%name" />
