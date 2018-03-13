@@ -9,6 +9,14 @@ public class Category {
 
     }
 
+    public int getTypeID() {
+        return typeID;
+    }
+
+    public void setTypeID(int typeID) {
+        this.typeID = typeID;
+    }
+
     public Category(String categoryName) {
         this.catName = categoryName;
     }

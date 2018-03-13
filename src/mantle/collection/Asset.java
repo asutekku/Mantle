@@ -40,7 +40,7 @@ public class Asset {
     }
 
     /**
-     * @return The category of the asset
+     * @return The CategoryPreferences of the asset
      */
     public Category getCategory() {
         return category;
@@ -82,7 +82,7 @@ public class Asset {
     }
 
     /**
-     * @param category The category of the asset
+     * @param category The CategoryPreferences of the asset
      */
     public void setCategory(Category category) {
         this.category = category;
@@ -112,8 +112,8 @@ public class Asset {
     /**
      * @param filename Name for the asset
      * @param filepath Path for the asset
-     * @param category category of the asset
-     * @param type     category of the asset
+     * @param category CategoryPreferences of the asset
+     * @param type     CategoryPreferences of the asset
      * @param size     Size of the asset
      * @param author   Asset author
      */

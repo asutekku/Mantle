@@ -25,219 +25,181 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="mantleBase" onDragDetected="#mantleBaseDragDetected" onDragDropped="#mantleBaseDragDropped"
-            onDragEntered="#mantleBaseDragEntered" prefHeight="600.0" prefWidth="1000.0"
-            style="-fx-border-radius: 30; -fx-background-radius: 30; -fx-background-color: transparent;"
-            xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="mantle.util.controllers.MantleController">
+<BorderPane fx:id="mantleBase" onDragDetected="#mantleBaseDragDetected" onDragDropped="#mantleBaseDragDropped" onDragEntered="#mantleBaseDragEntered" prefHeight="600.0" prefWidth="1000.0" style="-fx-border-radius: 30; -fx-background-radius: 30; -fx-background-color: transparent;" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mantle.util.controllers.MantleController">
     <center>
         <VBox fx:id="assetArea" style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">
             <children>
                 <BorderPane prefHeight="40.0">
                     <center>
-                        <TextField fx:id="searchBox" onAction="#onSearchEnter" promptText="%searchCollection"
-                                   BorderPane.alignment="CENTER">
+                        <TextField fx:id="searchBox" onAction="#onSearchEnter" promptText="%searchCollection" BorderPane.alignment="CENTER">
                             <BorderPane.margin>
-                                <Insets right="5.0"/>
+                                <Insets right="5.0" />
                             </BorderPane.margin>
                         </TextField>
                     </center>
                     <left>
-                        <Button fx:id="importButton" mnemonicParsing="false" onAction="#importButtonAction"
-                                text="%import" BorderPane.alignment="CENTER">
+                        <Button fx:id="importButton" mnemonicParsing="false" onAction="#importButtonAction" text="%import" BorderPane.alignment="CENTER">
                             <BorderPane.margin>
-                                <Insets left="5.0" right="5.0"/>
+                                <Insets left="5.0" right="5.0" />
                             </BorderPane.margin>
                         </Button>
                     </left>
                     <VBox.margin>
-                        <Insets bottom="5.0" top="5.0"/>
+                        <Insets bottom="5.0" top="5.0" />
                     </VBox.margin>
                 </BorderPane>
-                <ListChooser fx:id="chooserAssets" prefHeight="400.0" prefWidth="558.0"
-                             rivit="asset 1&#10;asset 2&#10;asset 3&#10;asset 4&#10;asset 5&#10;"/>
-                <TableView fx:id="assetTable" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                <ListChooser fx:id="chooserAssets" prefHeight="400.0" prefWidth="558.0" rivit="asset 1&#10;asset 2&#10;asset 3&#10;asset 4&#10;asset 5&#10;" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></ListChooser>
+                <TableView fx:id="assetTable" cacheShape="false" disable="true" prefWidth="200.0" visible="false" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="columnType" editable="false" prefWidth="41.81651306152344" text="%category"/>
-                        <TableColumn fx:id="columnName" editable="false" prefWidth="520.6835021972656" text="%name"/>
-                        <TableColumn fx:id="columnPath" prefWidth="75.0" text="%path"/>
+                        <TableColumn fx:id="columnType" editable="false" prefWidth="41.81651306152344" text="%category" />
+                        <TableColumn fx:id="columnName" editable="false" prefWidth="520.6835021972656" text="%name" />
+                        <TableColumn fx:id="columnPath" prefWidth="75.0" text="%path" />
                     </columns>
                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
                 </TableView>
             </children>
         </VBox>
     </center>
     <left>
-        <VBox focusTraversable="true" prefWidth="180.0" style="-fx-background-color: #f2f2f2;"
-              BorderPane.alignment="CENTER">
+        <VBox focusTraversable="true" prefWidth="180.0" style="-fx-background-color: #f2f2f2;" BorderPane.alignment="CENTER">
             <children>
                 <MenuBar fx:id="menubar" minHeight="40.0">
                     <menus>
                         <Menu mnemonicParsing="false" text="%file">
                             <items>
-                                <MenuItem fx:id="menuNew" mnemonicParsing="false" onAction="#menuActionNew"
-                                          text="%new"/>
-                                <MenuItem fx:id="menuOpen" mnemonicParsing="false" onAction="#menuActionOpen"
-                                          text="%open"/>
-                                <Menu fx:id="menuRecent" mnemonicParsing="false" text="%openRecent"/>
-                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                <MenuItem fx:id="menuClose" mnemonicParsing="false" onAction="#menuActionClose"
-                                          text="%close"/>
-                                <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#menuActionSave"
-                                          text="%save"/>
-                                <MenuItem fx:id="menuSaveas" mnemonicParsing="false" onAction="#menuActionSaveAs"
-                                          text="%saveAs"/>
-                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#menuActionQuit"
-                                          text="%quit"/>
+                                <MenuItem fx:id="menuNew" mnemonicParsing="false" onAction="#menuActionNew" text="%new" />
+                                <MenuItem fx:id="menuOpen" mnemonicParsing="false" onAction="#menuActionOpen" text="%open" />
+                                <Menu fx:id="menuRecent" mnemonicParsing="false" text="%openRecent" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem fx:id="menuClose" mnemonicParsing="false" onAction="#menuActionClose" text="%close" />
+                                <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#menuActionSave" text="%save" />
+                                <MenuItem fx:id="menuSaveas" mnemonicParsing="false" onAction="#menuActionSaveAs" text="%saveAs" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#menuActionQuit" text="%quit" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="%edit">
                             <items>
 
-                                <MenuItem mnemonicParsing="false" text="%undo"/>
-                                <MenuItem mnemonicParsing="false" text="%redo"/>
-                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                <MenuItem mnemonicParsing="false" text="%newEllipsis"/>
-                                <MenuItem mnemonicParsing="false" text="%editEllipsis"/>
-                                <MenuItem mnemonicParsing="false" text="%removeEllipsis"/>
-                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                <MenuItem mnemonicParsing="false" text="%selectAll"/>
-                                <MenuItem mnemonicParsing="false" text="%unselectAll"/>
+                                <MenuItem mnemonicParsing="false" text="%undo" />
+                                <MenuItem mnemonicParsing="false" text="%redo" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" text="%newEllipsis" />
+                                <MenuItem mnemonicParsing="false" text="%editEllipsis" />
+                                <MenuItem mnemonicParsing="false" text="%removeEllipsis" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" text="%selectAll" />
+                                <MenuItem mnemonicParsing="false" text="%unselectAll" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="%help">
                             <items>
-                                <MenuItem fx:id="aboutMantle" mnemonicParsing="false" onAction="#menuActionAbout"
-                                          text="%aboutMantle"/>
+                                <MenuItem fx:id="aboutMantle" mnemonicParsing="false" onAction="#menuActionAbout" text="%aboutMantle" />
                             </items>
                         </Menu>
                     </menus>
                 </MenuBar>
-                <MenuButton mnemonicParsing="false" prefWidth="185.0" text="%allCollections" textOverrun="CLIP"
-                            VBox.vgrow="ALWAYS">
+                <MenuButton mnemonicParsing="false" prefWidth="185.0" text="%allCollections" textOverrun="CLIP" VBox.vgrow="ALWAYS">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="%collection1"/>
-                        <MenuItem mnemonicParsing="false" text="%collection2"/>
+                        <MenuItem mnemonicParsing="false" text="%collection1" />
+                        <MenuItem mnemonicParsing="false" text="%collection2" />
                     </items>
                 </MenuButton>
-                <ListView prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
+                <ListView prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
             </children>
         </VBox>
     </left>
     <right>
-        <AnchorPane maxWidth="256.0" minWidth="220.0" prefWidth="256.0"
-                    style="-fx-border-color: transparent; -fx-background-color: white;" BorderPane.alignment="CENTER">
+        <AnchorPane maxWidth="256.0" minWidth="220.0" prefWidth="256.0" style="-fx-border-color: transparent; -fx-background-color: white;" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="labelDetails" alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;"
-                       text="%details" textAlignment="CENTER" wrapText="false" AnchorPane.leftAnchor="10.0"
-                       AnchorPane.topAnchor="10.0">
+                <Label fx:id="labelDetails" alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="%details" textAlignment="CENTER" wrapText="false" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
                     <font>
-                        <Font name="System Bold" size="22.0" fx:id="x1"/>
+                        <Font name="System Bold" size="22.0" fx:id="x1" />
                     </font>
                     <textFill>
-                        <Color blue="0.624" green="0.624" red="0.624" fx:id="x2"/>
+                        <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
                     </textFill>
                 </Label>
-                <ImageView fx:id="assetImage" fitHeight="160.0" fitWidth="160.0" layoutX="48.0" layoutY="47.0"
-                           pickOnBounds="true" AnchorPane.leftAnchor="48.0" AnchorPane.rightAnchor="48.0"
-                           AnchorPane.topAnchor="47.0"/>
-                <Button fx:id="buttonPlus" layoutX="189.0" layoutY="514.0" mnemonicParsing="false"
-                        onAction="#newButtonAction" text="%new" AnchorPane.bottomAnchor="5.0"
-                        AnchorPane.rightAnchor="5.0"/>
-                <Button fx:id="buttonSave" layoutX="189.0" layoutY="514.0" mnemonicParsing="false"
-                        onAction="#saveButtonAction" text="%save" visible="false" AnchorPane.bottomAnchor="5.0"
-                        AnchorPane.rightAnchor="5.0"/>
-                <Button fx:id="editButton" layoutX="9.0" layoutY="513.0" mnemonicParsing="false"
-                        onAction="#editButtonAction" text="%edit" AnchorPane.bottomAnchor="5.0"
-                        AnchorPane.leftAnchor="5.0"/>
-                <Button fx:id="cancelButton" layoutX="9.0" layoutY="513.0" mnemonicParsing="false"
-                        onAction="#cancelButtonAction" text="%cancel" visible="false" AnchorPane.bottomAnchor="5.0"
-                        AnchorPane.leftAnchor="5.0"/>
-                <GridPane fx:id="entityGrid" layoutX="7.0" layoutY="221.0" nodeOrientation="LEFT_TO_RIGHT"
-                          prefHeight="152.0" prefWidth="218.0">
+                <ImageView fx:id="assetImage" fitHeight="160.0" fitWidth="160.0" layoutX="48.0" layoutY="47.0" pickOnBounds="true" AnchorPane.leftAnchor="48.0" AnchorPane.rightAnchor="48.0" AnchorPane.topAnchor="47.0" />
+                <Button fx:id="editorbuttonNew" layoutX="189.0" layoutY="514.0" mnemonicParsing="false" onAction="#newButtonAction" text="%new" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+                <Button fx:id="editorbuttonSave" layoutX="189.0" layoutY="514.0" mnemonicParsing="false" onAction="#saveButtonAction" text="%save" visible="false" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+                <Button fx:id="editorbuttonEdit" layoutX="9.0" layoutY="513.0" mnemonicParsing="false" onAction="#editButtonAction" text="%edit" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" />
+                <Button fx:id="editorbuttonCancel" layoutX="9.0" layoutY="513.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="%cancel" visible="false" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" />
+                <GridPane fx:id="entityGrid" layoutX="7.0" layoutY="221.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="152.0" prefWidth="218.0">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.4449462890625" minWidth="10.0"
-                                           prefWidth="74.6224365234375"/>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="157.69769287109375" minWidth="10.0"
-                                           prefWidth="143.3775634765625"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.4449462890625" minWidth="10.0" prefWidth="74.6224365234375" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="157.69769287109375" minWidth="10.0" prefWidth="143.3775634765625" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES"/>
-                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES"/>
-                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES"/>
-                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES"/>
-                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES"/>
-                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES"/>
-                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label fx:id="labelName" text="%name" GridPane.halignment="RIGHT" GridPane.valignment="CENTER"/>
-                        <Label fx:id="labelAuthor" text="%author" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
-                        <Label fx:id="labelPath" text="%path" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
-                        <Label fx:id="labelCategory" text="%collection" GridPane.halignment="RIGHT"
-                               GridPane.rowIndex="3"/>
-                        <Label fx:id="labelFilesize" text="%fileSize" GridPane.halignment="RIGHT"
-                               GridPane.rowIndex="4"/>
-                        <Label fx:id="labelType" text="%category" GridPane.halignment="RIGHT" GridPane.rowIndex="5"/>
-                        <Label fx:id="labelTags" text="%tags" GridPane.halignment="RIGHT" GridPane.rowIndex="6"/>
-                        <TextField fx:id="_editName" promptText="%editAssetName" visible="false"
-                                   GridPane.columnIndex="1"/>
-                        <Text fx:id="_assetName" fill="#797979" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetName"
-                              GridPane.columnIndex="1">
+                        <Label fx:id="labelName" text="%name" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
+                        <Label fx:id="labelAuthor" text="%author" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Label fx:id="labelPath" text="%path" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                        <Label fx:id="labelCategory" text="%collection" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                        <Label fx:id="labelFilesize" text="%fileSize" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                        <Label fx:id="labelType" text="%category" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                        <Label fx:id="labelTags" text="%tags" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+                        <TextField fx:id="_editName" promptText="%key.editAssetName" visible="false" GridPane.columnIndex="1" />
+                        <Text fx:id="_assetName" fill="#797979" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetName" GridPane.columnIndex="1">
                             <GridPane.margin>
-                                <Insets left="5.0"/>
+                                <Insets left="5.0" />
                             </GridPane.margin>
                         </Text>
-                        <TextField fx:id="_editAuthor" promptText="%editAssetAuthor" visible="false"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                        <Text fx:id="_assetAuthor" fill="#797979" strokeType="OUTSIDE" strokeWidth="0.0"
-                              text="#assetAuthor" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <TextField fx:id="_editAuthor" promptText="%key.editAssetAuthor" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Text fx:id="_assetAuthor" fill="#797979" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetAuthor" GridPane.columnIndex="1" GridPane.rowIndex="1">
                             <GridPane.margin>
-                                <Insets left="5.0"/>
+                                <Insets left="5.0" />
                             </GridPane.margin>
                         </Text>
-                        <TextField fx:id="_editPath" promptText="%editAssetPath" visible="false"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                        <Text fx:id="_assetPath" fill="#797979" layoutX="79.0" layoutY="52.0" strokeType="OUTSIDE"
-                              strokeWidth="0.0" text="#assetPath" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <right>
+                              <Button fx:id="editorbuttonImport" mnemonicParsing="false" onAction="#editorImportAction" text="..." visible="false" BorderPane.alignment="CENTER" />
+                     </right>
+                     <center>
+                              <TextField fx:id="_editPath" promptText="%key.editAssetPath" visible="false" BorderPane.alignment="CENTER" />
+                     </center>
+                  </BorderPane>
+                        <Text fx:id="_assetPath" fill="#797979" layoutX="79.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetPath" GridPane.columnIndex="1" GridPane.rowIndex="2">
                             <GridPane.margin>
-                                <Insets left="5.0"/>
+                                <Insets left="5.0" />
                             </GridPane.margin>
                         </Text>
-                        <TextField fx:id="_editCategory" promptText="%editAssetCollection" visible="false"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                        <Text fx:id="_assetCollection" fill="#797979" layoutX="74.0" layoutY="77.0" strokeType="OUTSIDE"
-                              strokeWidth="0.0" text="#assetCollection" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <TextField fx:id="_editCategory" promptText="%key.editAssetCollection" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Text fx:id="_assetCollection" fill="#797979" layoutX="74.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetCollection" GridPane.columnIndex="1" GridPane.rowIndex="3">
                             <GridPane.margin>
-                                <Insets left="5.0"/>
+                                <Insets left="5.0" />
                             </GridPane.margin>
                         </Text>
-                        <TextField fx:id="_editFilesize" promptText="%editAssetFilesize" visible="false"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-                        <Text fx:id="_assetFilesize" fill="#797979" layoutX="74.0" layoutY="102.0" strokeType="OUTSIDE"
-                              strokeWidth="0.0" text="#assetFilesize" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <TextField fx:id="_editFilesize" promptText="%key.editAssetFilesize" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Text fx:id="_assetFilesize" fill="#797979" layoutX="74.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetFilesize" GridPane.columnIndex="1" GridPane.rowIndex="4">
                             <GridPane.margin>
-                                <Insets left="5.0"/>
+                                <Insets left="5.0" />
                             </GridPane.margin>
                         </Text>
-                        <TextField fx:id="_editType" promptText="%editAssetType" visible="false"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                        <Text fx:id="_assetType" fill="#797979" layoutX="74.0" layoutY="127.0" strokeType="OUTSIDE"
-                              strokeWidth="0.0" text="#assetType" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <ComboBox fx:id="editCategoryCombo" prefWidth="150.0" promptText="%editTypeCombo" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Text fx:id="_assetType" fill="#797979" layoutX="74.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetType" GridPane.columnIndex="1" GridPane.rowIndex="5">
                             <GridPane.margin>
-                                <Insets left="5.0"/>
+                                <Insets left="5.0" />
                             </GridPane.margin>
                         </Text>
-                        <ComboBox fx:id="editTypeCombo" prefWidth="150.0" visible="false" promptText="%editTypeCombo"
-                                  GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                        <Text fx:id="_assetTags" fill="#797979" layoutX="74.0" layoutY="152.0" strokeType="OUTSIDE"
-                              strokeWidth="0.0" text="#assetTags" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        <TextField fx:id="_editTags" promptText="%key.editAssetTags" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Text fx:id="_assetTags" fill="#797979" layoutX="74.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="#assetTags" GridPane.columnIndex="1" GridPane.rowIndex="6">
                             <GridPane.margin>
-                                <Insets left="5.0"/>
+                                <Insets left="5.0" />
                             </GridPane.margin>
                         </Text>
                     </children>

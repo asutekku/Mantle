@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class application {
+public class ApplicationPreferences {
 
     /**
-     * Mantle Preference File = .mpf
+     * Mantle Preference fileHelper = .mpf
      * Looks like ini
      * Behaves like ini
      * Smells like ini
@@ -20,7 +20,7 @@ public class application {
     private static Pattern _keyValue = Pattern.compile("\\s*([^=]*)=(.*)");
     private static Map<String, String> _entries = new HashMap<>();
 
-    public application(String path) throws IOException {
+    public ApplicationPreferences(String path) throws IOException {
         load(path);
     }
 

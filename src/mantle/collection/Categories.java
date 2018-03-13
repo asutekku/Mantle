@@ -1,11 +1,11 @@
 package mantle.collection;
 
 public class Categories {
-    int max_types = 16;
-    private Category categories[] = new Category[max_types];
+    private Category[] categories;
     int count = 0;
 
-    public Categories() {
+    public Categories(int size) {
+        categories = new Category[size];
     }
 
     public void addNew(Category category) throws HandleException {
@@ -14,5 +14,16 @@ public class Categories {
         count++;
     }
 
+    public Category[] getCategoryArray(){
+        return categories;
+    }
+
+    public int length(){
+        return categories.length;
+    }
+
+    public String toString(int index) {
+        return categories[index].toString();
+    }
 
 }
