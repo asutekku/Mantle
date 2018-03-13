@@ -185,7 +185,7 @@
     <copy todir="${mantle.output.dir}">
       <fileset dir="${module.mantle.basedir}/src">
         <patternset refid="compiler.resources"/>
-        <type type="file"/>
+        <category category="file"/>
       </fileset>
     </copy>
   </target>

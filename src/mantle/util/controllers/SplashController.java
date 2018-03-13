@@ -1,4 +1,4 @@
-package mantle.controllers;
+package mantle.util.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;

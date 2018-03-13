@@ -18,7 +18,7 @@ public class MantleMain extends Application {
 
             Localization local = new Localization("fi", "FI");
             ResourceBundle bundle = local.getLocale();
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("scenes/splash.fxml"), bundle);
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("resources/scenes/splash.fxml"), bundle);
             final Pane root = loader.load();
             final Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("resources/bootstrap3.css").toExternalForm());

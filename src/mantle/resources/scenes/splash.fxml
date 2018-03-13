@@ -11,7 +11,7 @@
 
 <BorderPane fx:id="splashRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="mantle.controllers.SplashController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="mantle.util.controllers.SplashController">
     <bottom>
         <AnchorPane prefHeight="25.0" prefWidth="50.0" BorderPane.alignment="CENTER">
             <children>
@@ -34,7 +34,7 @@
                 <ImageView fitHeight="64.0" fitWidth="64.0" layoutX="269.0" layoutY="30.0" pickOnBounds="true"
                            preserveRatio="true">
                     <image>
-                        <Image url="@../resources/iconLarge.png"/>
+                        <Image url="@../iconLarge.png"/>
                     </image>
                 </ImageView>
                 <Label layoutX="177.0" layoutY="122.0" text="%welcomeMessage">

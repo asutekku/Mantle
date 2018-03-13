@@ -1,4 +1,4 @@
-package mantle.controllers;
+package mantle.util.controllers;
 
 import java.io.File;
 import java.net.URL;
@@ -38,7 +38,7 @@ public class MantleController implements Initializable {
     @FXML
     private Button buttonSave, buttonPlus, editButton;
     @FXML
-    private TextField searchBox, _editName, _editAuthor, _editPath, _editCollection, _editFilesize, _editType, _editTags;
+    private TextField searchBox, _editName, _editAuthor, _editPath, _editCategory, _editFilesize, _editType, _editTags;
     @FXML
     private Text _assetName, _assetAuthor, _assetPath, _assetCollection, _assetFilesize, _assetType, _assetTags;
     private TableView<Asset> assetTable;
@@ -46,8 +46,10 @@ public class MantleController implements Initializable {
     TableColumn<Asset, String> columnType, columnName, columnPath;
     @FXML
     private ImageView assetImage;
-
     private String CollectionName = "Sample";
+    private Collection collection = new Collection();
+    @FXML
+    private ListChooser<Asset> chooserAssets;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -57,9 +59,6 @@ public class MantleController implements Initializable {
         if (macMenu != null && macMenu.equals("true")) {
             //BProot.getChildren().remove(menubar);
         }
-        columnType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        columnName.setCellValueFactory(new PropertyValueFactory<>("filename"));
-        columnPath.setCellValueFactory(new PropertyValueFactory<>("filepath"));
         init();
     }
 
@@ -147,20 +146,25 @@ public class MantleController implements Initializable {
                         Long.toString(file.length() / 1000000) + " MB";
                 _editPath.setText(filepath);
                 _editFilesize.setText(fileSize);
-                setImage(assetImage,filepath);
+                setImage(assetImage, filepath);
 
             }
             newAssetVisibilityToggles();
             toggleEditorVisibility();
+            editingInProcess = true;
         } else {
             eventHandler.error($("errorFinishBeforeAddingNew"));
         }
     }
 
-    public void setImage(ImageView imgview, String path){
-        Image image = new Image(path);
-        imgview.setImage(image);
-        imgview.fitWidthProperty();
+    public void setImage(ImageView imgview, String path) {
+        if (path != null && !path.isEmpty()) {
+            Image image = new Image(path);
+            imgview.setImage(image);
+            imgview.fitWidthProperty();
+        } else {
+            imgview.setImage(null);
+        }
     }
 
     @FXML
@@ -178,23 +182,15 @@ public class MantleController implements Initializable {
             buttonPlus.setVisible(!buttonPlus.isVisible());
             buttonSave.setVisible(!buttonSave.isVisible());
         }
-        //newAsset();
     }
 
     @FXML
     private void editButtonAction(ActionEvent event) {
-        _assetName.setVisible(!_assetName.isVisible());
-        _editName.setVisible(!_editName.isVisible());
-        _assetAuthor.setVisible(!_assetAuthor.isVisible());
-        _editAuthor.setVisible(!_editAuthor.isVisible());
-        _assetCollection.setVisible(!_assetCollection.isVisible());
-        _editCollection.setVisible(!_editCollection.isVisible());
-        _assetType.setVisible(!_assetType.isVisible());
-        _editType.setVisible(!_editType.isVisible());
-        _assetTags.setVisible(!_assetTags.isVisible());
-        _editTags.setVisible(!_editTags.isVisible());
-        buttonPlus.setVisible(!buttonPlus.isVisible());
+        toggleEditorVisibility();
+    }
 
+    @FXML
+    public void cancelButtonAction(ActionEvent actionEvent) {
     }
 
     @FXML
@@ -211,11 +207,6 @@ public class MantleController implements Initializable {
     @FXML
     public void mantleBaseDragEntered(DragEvent dragEvent) {
     }
-
-    private Collection collection = new Collection();
-
-    @FXML
-    private ListChooser<Asset> chooserAssets;
 
     protected void search(int idNum) {
         chooserAssets.clear();
@@ -236,15 +227,15 @@ public class MantleController implements Initializable {
         }
         _assetName.setText(asset.getName());
         _assetAuthor.setText(asset.getAuthor());
-        _assetCollection.setText(asset.getCategory());
+        _assetCollection.setText(asset.getCategory().toString());
         _assetPath.setText(asset.getPath());
         _assetFilesize.setText(asset.getSize());
         _assetTags.setText(taglist.toString());
-        _assetType.setText(asset.getType());
+        _assetType.setText(asset.getCategory().toString());
         try {
-            setImage(assetImage,asset.getPath());
+            setImage(assetImage, asset.getPath());
         } finally {
-            System.out.println("whoops");
+           //nothing
         }
     }
 
@@ -253,18 +244,20 @@ public class MantleController implements Initializable {
         String assetName = _editName.getText(),
                 assetPath = _editPath.getText(),
                 assetAuthor = _editAuthor.getText(),
-                assetCategory = _editCollection.getText(),
+                //assetCategory = _editCategory.getText(),
                 assetType = _editType.getText(),
                 assetSize = _editFilesize.getText();
         if (assetName != null && !assetName.isEmpty()) {
             Tag newTag = new Tag(_editTags.getText());
-            Asset newAsset = new Asset(assetName, assetPath, assetAuthor, assetCategory, assetType, newTag, assetSize);
+            Category assetCat = new Category(_editCategory.getText());
+
+            Asset newAsset = new Asset(assetName, assetPath, assetAuthor, assetCat, newTag, assetSize);
             newTag.setAssetID(newAsset.getId());
+
             newAsset.register();
             newTag.register();
             try {
                 collection.add(newAsset);
-                //assetTable.getItems().add(newAsset);
             } catch (HandleException e) {
                 eventHandler.error("Problems with creating a new asset " + e.getMessage());
             }
@@ -281,10 +274,11 @@ public class MantleController implements Initializable {
         _editName.setText("");
         _editAuthor.setText("");
         _editPath.setText("");
-        _editCollection.setText("");
+        _editCategory.setText("");
         _editFilesize.setText("");
         _editType.setText("");
         _editTags.setText("");
+        assetImage.setImage(null);
     }
 
     public void toggleEditorVisibility() {
@@ -292,12 +286,8 @@ public class MantleController implements Initializable {
         _editName.setVisible(!_editName.isVisible());
         _assetAuthor.setVisible(!_assetAuthor.isVisible());
         _editAuthor.setVisible(!_editAuthor.isVisible());
-        _assetPath.setVisible(!_assetPath.isVisible());
-        _editPath.setVisible(!_editPath.isVisible());
         _assetCollection.setVisible(!_assetCollection.isVisible());
-        _editCollection.setVisible(!_editCollection.isVisible());
-        _assetFilesize.setVisible(!_assetFilesize.isVisible());
-        _editFilesize.setVisible(!_editFilesize.isVisible());
+        _editCategory.setVisible(!_editCategory.isVisible());
         _assetType.setVisible(!_assetType.isVisible());
         _editType.setVisible(!_editType.isVisible());
         _assetTags.setVisible(!_assetTags.isVisible());
@@ -307,11 +297,13 @@ public class MantleController implements Initializable {
     protected void init() {
         chooserAssets.clear();
         chooserAssets.addSelectionListener(e -> showAsset());
+        columnType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        columnName.setCellValueFactory(new PropertyValueFactory<>("filename"));
+        columnPath.setCellValueFactory(new PropertyValueFactory<>("filepath"));
     }
 
     public void setCollection(Collection collection) {
         this.collection = collection;
     }
-
 
 }

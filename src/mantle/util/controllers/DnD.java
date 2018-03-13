@@ -1,4 +1,4 @@
-package mantle.controllers;
+package mantle.util.controllers;
 
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;

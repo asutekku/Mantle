@@ -1,4 +1,4 @@
-package mantle.util;
+package mantle.util.preferences;
 
 import java.io.*;
 import java.util.HashMap;
@@ -6,7 +6,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Preferences {
+public class application {
+
     /**
      * Mantle Preference File = .mpf
      * Looks like ini
@@ -19,7 +20,7 @@ public class Preferences {
     private static Pattern _keyValue = Pattern.compile("\\s*([^=]*)=(.*)");
     private static Map<String, String> _entries = new HashMap<>();
 
-    public Preferences(String path) throws IOException {
+    public application(String path) throws IOException {
         load(path);
     }
 
@@ -57,5 +58,9 @@ public class Preferences {
     public static void main(String[] args){
         load(filename);
         save(filename);
+    }
+
+    public static void loadTypes() {
+
     }
 }

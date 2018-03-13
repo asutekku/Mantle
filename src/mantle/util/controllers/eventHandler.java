@@ -1,4 +1,4 @@
-package mantle.controllers;
+package mantle.util.controllers;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -66,7 +66,7 @@ public class eventHandler {
      */
     public static void changeScene(ActionEvent event, String sceneName) {
         try {
-            Parent root = FXMLLoader.load(eventHandler.class.getClassLoader().getResource("mantle/scenes/" + sceneName + ".fxml"), bundle);
+            Parent root = FXMLLoader.load(eventHandler.class.getClassLoader().getResource("mantle/resources/scenes/" + sceneName + ".fxml"), bundle);
             Scene newScene = new Scene(root);
             Stage originalScene = (Stage) ((Node) event.getSource()).getScene().getWindow();
             originalScene.setScene(newScene);
@@ -87,7 +87,7 @@ public class eventHandler {
     public static void OpenNewWindow(ActionEvent event, String windowName, String windowTitle, boolean hideOldWindow) {
         Parent root;
         try {
-            root = FXMLLoader.load(eventHandler.class.getClassLoader().getResource("mantle/scenes/" + windowName + ".fxml"), bundle);
+            root = FXMLLoader.load(eventHandler.class.getClassLoader().getResource("mantle/resources/scenes/" + windowName + ".fxml"), bundle);
             Stage stage = new Stage();
             stage.setTitle(windowTitle);
             stage.setScene(new Scene(root));

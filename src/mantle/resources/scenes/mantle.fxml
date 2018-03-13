@@ -3,6 +3,7 @@
 <?import fi.jyu.mit.fxgui.ListChooser?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
@@ -28,7 +29,7 @@
             onDragEntered="#mantleBaseDragEntered" prefHeight="600.0" prefWidth="1000.0"
             style="-fx-border-radius: 30; -fx-background-radius: 30; -fx-background-color: transparent;"
             xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="mantle.controllers.MantleController">
+            fx:controller="mantle.util.controllers.MantleController">
     <center>
         <VBox fx:id="assetArea" style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">
             <children>
@@ -57,7 +58,7 @@
                              rivit="asset 1&#10;asset 2&#10;asset 3&#10;asset 4&#10;asset 5&#10;"/>
                 <TableView fx:id="assetTable" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="columnType" editable="false" prefWidth="41.81651306152344" text="%type"/>
+                        <TableColumn fx:id="columnType" editable="false" prefWidth="41.81651306152344" text="%category"/>
                         <TableColumn fx:id="columnName" editable="false" prefWidth="520.6835021972656" text="%name"/>
                         <TableColumn fx:id="columnPath" prefWidth="75.0" text="%path"/>
                     </columns>
@@ -99,9 +100,9 @@
                                 <MenuItem mnemonicParsing="false" text="%undo"/>
                                 <MenuItem mnemonicParsing="false" text="%redo"/>
                                 <SeparatorMenuItem mnemonicParsing="false"/>
-                                <MenuItem mnemonicParsing="false" text="%newdots"/>
-                                <MenuItem mnemonicParsing="false" text="%editdots"/>
-                                <MenuItem mnemonicParsing="false" text="%removedots"/>
+                                <MenuItem mnemonicParsing="false" text="%newEllipsis"/>
+                                <MenuItem mnemonicParsing="false" text="%editEllipsis"/>
+                                <MenuItem mnemonicParsing="false" text="%removeEllipsis"/>
                                 <SeparatorMenuItem mnemonicParsing="false"/>
                                 <MenuItem mnemonicParsing="false" text="%selectAll"/>
                                 <MenuItem mnemonicParsing="false" text="%unselectAll"/>
@@ -152,6 +153,9 @@
                 <Button fx:id="editButton" layoutX="9.0" layoutY="513.0" mnemonicParsing="false"
                         onAction="#editButtonAction" text="%edit" AnchorPane.bottomAnchor="5.0"
                         AnchorPane.leftAnchor="5.0"/>
+                <Button fx:id="cancelButton" layoutX="9.0" layoutY="513.0" mnemonicParsing="false"
+                        onAction="#cancelButtonAction" text="%cancel" visible="false" AnchorPane.bottomAnchor="5.0"
+                        AnchorPane.leftAnchor="5.0"/>
                 <GridPane fx:id="entityGrid" layoutX="7.0" layoutY="221.0" nodeOrientation="LEFT_TO_RIGHT"
                           prefHeight="152.0" prefWidth="218.0">
                     <columnConstraints>
@@ -178,7 +182,7 @@
                                GridPane.rowIndex="3"/>
                         <Label fx:id="labelFilesize" text="%fileSize" GridPane.halignment="RIGHT"
                                GridPane.rowIndex="4"/>
-                        <Label fx:id="labelType" text="%type" GridPane.halignment="RIGHT" GridPane.rowIndex="5"/>
+                        <Label fx:id="labelType" text="%category" GridPane.halignment="RIGHT" GridPane.rowIndex="5"/>
                         <Label fx:id="labelTags" text="%tags" GridPane.halignment="RIGHT" GridPane.rowIndex="6"/>
                         <TextField fx:id="_editName" promptText="%editAssetName" visible="false"
                                    GridPane.columnIndex="1"/>
@@ -188,7 +192,7 @@
                                 <Insets left="5.0"/>
                             </GridPane.margin>
                         </Text>
-                        <TextField fx:id="_editAuthor" promptText="%EditAssetAuthor" visible="false"
+                        <TextField fx:id="_editAuthor" promptText="%editAssetAuthor" visible="false"
                                    GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                         <Text fx:id="_assetAuthor" fill="#797979" strokeType="OUTSIDE" strokeWidth="0.0"
                               text="#assetAuthor" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -204,7 +208,7 @@
                                 <Insets left="5.0"/>
                             </GridPane.margin>
                         </Text>
-                        <TextField fx:id="_editCollection" promptText="%editAssetCollection" visible="false"
+                        <TextField fx:id="_editCategory" promptText="%editAssetCollection" visible="false"
                                    GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                         <Text fx:id="_assetCollection" fill="#797979" layoutX="74.0" layoutY="77.0" strokeType="OUTSIDE"
                               strokeWidth="0.0" text="#assetCollection" GridPane.columnIndex="1" GridPane.rowIndex="3">
@@ -228,8 +232,8 @@
                                 <Insets left="5.0"/>
                             </GridPane.margin>
                         </Text>
-                        <TextField fx:id="_editTags" promptText="%editAssetTags" visible="false"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        <ComboBox fx:id="editTypeCombo" prefWidth="150.0" visible="false" promptText="%editTypeCombo"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="5"/>
                         <Text fx:id="_assetTags" fill="#797979" layoutX="74.0" layoutY="152.0" strokeType="OUTSIDE"
                               strokeWidth="0.0" text="#assetTags" GridPane.columnIndex="1" GridPane.rowIndex="6">
                             <GridPane.margin>

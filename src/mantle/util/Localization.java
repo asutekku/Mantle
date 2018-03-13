@@ -22,14 +22,14 @@ public class Localization {
         this.language = "en";
         this.country = "US";
         this.currentLocale = new Locale(this.language, this.country);
-        this.locale = ResourceBundle.getBundle("mantle.localization.lang", this.currentLocale);
+        this.locale = ResourceBundle.getBundle("mantle.resources.localization.lang", this.currentLocale);
     }
 
     public Localization(String language, String country) {
         this.language = language;
         this.country = country;
         this.currentLocale = new Locale(language, country);
-        this.locale = ResourceBundle.getBundle("mantle.localization.lang", this.currentLocale);
+        this.locale = ResourceBundle.getBundle("mantle.resources.localization.lang", this.currentLocale);
     }
 
     public String getLanguage() {
@@ -49,7 +49,7 @@ public class Localization {
     }
 
     public void setLocale() {
-        this.locale = ResourceBundle.getBundle("mantle.localization.lang", this.currentLocale);
+        this.locale = ResourceBundle.getBundle("mantle.resources.localization.lang", this.currentLocale);
     }
 
     public ResourceBundle getLocale() {
