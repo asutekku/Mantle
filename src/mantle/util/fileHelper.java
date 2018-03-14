@@ -9,10 +9,21 @@ import mantle.util.preferences.PreferenceLoader;
 import java.io.File;
 import java.util.ResourceBundle;
 
+/**
+ * FileHelper class
+ *
+ * Used for file handling operations and printing the filesize in proper format
+ */
 public class fileHelper {
 
     private static ResourceBundle messages = PreferenceLoader.getLanguageBundle();
 
+    /**
+     * Gets the assets size in human readable form instead of pure bytes
+     *
+     * @param file Asset's file
+     * @return Asset's size in proper form
+     */
     public static String getSize(File file) {
         String fileSize;
         fileSize = file.length() < 1000000 ?
@@ -21,10 +32,22 @@ public class fileHelper {
         return fileSize;
     }
 
+    /**
+     * Helper function for strings
+     *
+     * @param key String's key
+     * @return String from key
+     */
     private static String $(String key) {
         return messages.getString(key);
     }
 
+    /**
+     * Opens file import dialogd
+     *
+     * @param menubar Just some element to select the window where it's opened from
+     * @return File opened
+     */
     public static File importFile(MenuBar menubar) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
@@ -33,10 +56,23 @@ public class fileHelper {
         return fileChooser.showOpenDialog(menubar.getScene().getWindow());
     }
 
+    /**
+     * Returns the path of a File in a string from
+     *
+     * @param file File
+     * @return Path of the File
+     */
     public static String getPath(File file) {
         return file.toURI().toString();
     }
 
+    /**
+     * Set's image to the imgview
+     * If path is not image or it is not proper, image will be null
+     *
+     * @param imgview
+     * @param path
+     */
     public static void setImage(ImageView imgview, String path) {
         if (path != null && !path.isEmpty() && path != "Undefined") {
             try {

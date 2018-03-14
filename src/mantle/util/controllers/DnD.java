@@ -5,8 +5,19 @@ import javafx.scene.input.Dragboard;
 
 import java.io.File;
 
+/**
+ * Drag and Drop controller
+ * Right now for some unknown reason it does not work
+ */
 public class DnD {
 
+    /**
+     * Should return the path of the file dropped
+     * Does not work :(
+     *
+     * @param e
+     * @return Path of the asset
+     */
     public static String mouseDragDropped(final DragEvent e) {
         final Dragboard db = e.getDragboard();
         boolean success = false;

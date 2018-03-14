@@ -9,6 +9,12 @@ import mantle.util.Localization;
 
 import java.util.ResourceBundle;
 
+/**
+ * Main class for the Mantle
+ *
+ * In here you define the locale and handle the launch arguments
+ *
+ */
 public class MantleMain extends Application {
 
     @Override

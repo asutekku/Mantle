@@ -9,13 +9,20 @@ import javafx.scene.Node;
 import javafx.event.*;
 import javafx.scene.layout.Pane;
 import mantle.util.Localization;
+import mantle.util.preferences.PreferenceLoader;
 
 import java.util.ResourceBundle;
 
+/**
+ * Eventhandler class
+ * <p>
+ * Handles basic functionality of the application
+ *
+ * @Author Aku Mäkelä
+ */
 public class eventHandler {
 
-    private static Localization local = new Localization();
-    private static ResourceBundle bundle = local.getLocale();
+    private static ResourceBundle bundle = PreferenceLoader.getLanguageBundle();
 
     /**
      * This method allows to return a customizable error string
@@ -50,6 +57,12 @@ public class eventHandler {
         stage.close();
     }
 
+    /**
+     * Saves data to file
+     * Well obviously not yet
+     *
+     * @param Message
+     */
     public static void saveData(String Message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error!");
@@ -60,6 +73,7 @@ public class eventHandler {
 
     /**
      * This method is used to call, when one wants to change scene without changing the stage
+     * Bundle is the localization bundle specified in the preferenceloader
      *
      * @param event     Event to determinate which scene to to replace
      * @param sceneName Part of the scene's filename without fxml extension.

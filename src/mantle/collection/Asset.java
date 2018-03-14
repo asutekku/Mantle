@@ -1,5 +1,6 @@
 package mantle.collection;
 
+import javafx.scene.control.ComboBox;
 import mantle.util.preferences.PreferenceLoader;
 
 import java.io.*;
@@ -7,7 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Asset
+ * Asset class
+ *
+ * Stores all the details required when creating an asset
+ *
+ * User will be able to create new assets
+ * (That's kind of point of the application)
+ *
+ * The class will not store any Tags as that will be handled by the collection
  *
  * @author Aku Mäkelä
  * @version 0.2, 13.03.2018
@@ -17,7 +25,6 @@ public class Asset {
     private String filepath;
     private String filename;
     private String author;
-    private List<Integer> tags = new ArrayList<Integer>();
     private Category category = new Category();
     private String type;
     private String size;
@@ -52,63 +59,108 @@ public class Asset {
     }
 
     /**
-     * @return The tags assigned to the asset
-     */
-    public List<Integer> getTags() throws IndexOutOfBoundsException {
-        return tags;
-    }
-
-    public int getTagCount() {
-        return tags.size();
-    }
-
-    /**
-     * @return Returns the asset filesize
+     * @return Returns the asset's filesize
      */
     public String getSize() {
         return size;
     }
 
     /**
+     * Returns either true or false depending if assiging a path works
+     * Right now it only checks if the path is empty
+     *
      * @param filepath The filepath for the asset
      */
-    public void setFilepath(String filepath) {
-        this.filepath = filepath;
+    public boolean setFilepath(String filepath) {
+        if (filepath != null && !filepath.isEmpty()) {
+            this.filepath = filepath;
+            return true;
+        }
+        return false;
     }
 
     /**
      * @param filename The name (Name) for the asset
      */
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public boolean setFilename(String filename) {
+        if (filename != null && !filename.isEmpty()) {
+            this.filename = filename;
+            return true;
+        }
+        return false;
     }
 
     /**
      * @param author The author of the asset
      */
-    public void setAuthor(String author) {
-        this.author = author;
+    public boolean setAuthor(String author) {
+        if (author != null && !author.isEmpty()) {
+            this.author = author;
+            return true;
+        }
+        return false;
     }
 
     /**
-     * @param category The CategoryPreferences of the asset
+     * Assigns a new type to the asset and checks if it goes through
+     *
+     * @param type Type to add
+     * @return
      */
-    public void setCategory(Category category) {
+    public boolean setType(String type) {
+        if (type != null && !type.isEmpty()) {
+            this.type = type;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Assigns a category to the asset from a ComboBox
+     * If category is not defined, category is Basic
+     *
+     * @param categories Categoryset to choose the category from
+     * @param combo Combobox to take the category from
+     */
+    public void setCategory(Categories categories, ComboBox<String> combo) {
+        for (int i = 0; i < categories.getCategoryArray().length; i++) {
+            if (categories.getCategoryArray()[i].toString() == combo.getValue()) {
+                setCategory(categories.getCategoryArray()[i]);
+                break;
+            } else {
+                setCategory(categories.getCategoryArray()[0]);
+            }
+        }
+    }
+
+    /**
+     * General set category when you have the precise category defined
+     *
+     * @param category
+     */
+    public void setCategory(Category category){
         this.category = category;
     }
 
     /**
-     * @param tag The tag to be added to the asset
-     */
+     * @param tagID The id of the tag to be assigned to the asset
+
     public void setTag(int tagID) throws HandleException {
         tags.add(tagID);
-    }
+    }*/
 
     /**
+     * Setter function for the size
+     * Is boolean for easy checking if the set worked
+     *
      * @param size Want to compress the file? Just input small filesize :^)
      */
-    public void setSize(String size) {
-        this.size = size;
+    public boolean setSize(String size) {
+        if (size != null && !size.isEmpty()) {
+            this.size = size;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -124,6 +176,9 @@ public class Asset {
     }
 
     /**
+     * Constructor with parameters
+     * Used very rarely
+     *
      * @param filename Name for the asset
      * @param filepath Path for the asset
      * @param category CategoryPreferences of the asset
@@ -139,7 +194,7 @@ public class Asset {
     }
 
     /**
-     * Print the asset details
+     * Print the asset's name
      *
      * @param out where the details will be printed
      */
@@ -147,22 +202,11 @@ public class Asset {
         out.println(filename);
     }
 
-
-    /**
-     * Print the asset details
-     *
-     * @param os where the details will be printed
-     */
-    public void print(OutputStream os) {
-        print(new PrintStream(os));
-    }
-
-
     /**
      * Gives a new idnumber to the asset
      * The number is always ascending
      * <p>
-     * If asset is deleted, the number will not be reassigned
+     * If asset is deleted, the ID for that will not be reassigned
      *
      * @return id of the asset
      */
@@ -172,7 +216,6 @@ public class Asset {
         return idNumber;
     }
 
-
     /**
      * returns The id of the asset
      *
@@ -180,13 +223,5 @@ public class Asset {
      */
     public int getId() {
         return idNumber;
-    }
-
-    public static void main(String args[]) {
-
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 }

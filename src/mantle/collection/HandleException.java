@@ -5,8 +5,6 @@ package mantle.collection;
  */
 public class HandleException extends Exception {
     private static final long serialVersionUID = 1L;
-
-
     /**
      * Exception handler
      *

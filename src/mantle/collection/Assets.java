@@ -5,13 +5,18 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Collection of assets
+ * Assets class
+ *
+ * All of the collections assets will be stored to the asset list
+ * User will be not able to create a new Assets class
+ *
+ * @Author Aku Mäkelä
+ *
  */
 public class Assets  implements Iterable<Asset> {
     private static int count = 0;
     private String filename = "";
     private final List<Asset> items = new ArrayList<Asset>();
-
 
     /**
      * Default constructor
@@ -50,7 +55,7 @@ public class Assets  implements Iterable<Asset> {
      * @throws IndexOutOfBoundsException out of bounds
      */
     public Asset getbyID(int ID) throws IndexOutOfBoundsException {
-        Asset returnable = new Asset();
+        Asset returnable = null;
         try {
             for (Asset i : items) {
                 if (i.getId() ==ID){
@@ -63,16 +68,31 @@ public class Assets  implements Iterable<Asset> {
         return returnable;
     }
 
+    /**
+     * Reads the asset database from a file
+     * MCL = Mantle CoLlection
+     *
+     * @param path
+     * @throws HandleException
+     */
     public void readFromFile(String path) throws HandleException {
         filename = path + "/assets.mcl";
         throw new HandleException("Can't read from file: " + filename);
     }
 
+    /**
+     * Saves the asset database to file
+     *
+     * @throws HandleException
+     */
     public void save() throws HandleException {
         throw new HandleException("Can't save to file: " + filename);
     }
 
 
+    /**
+     * @return The count of assets
+     */
     public int getCount() {
         return count;
     }

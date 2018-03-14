@@ -5,8 +5,6 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.text.Text;
@@ -28,19 +26,15 @@ public class MantleController implements Initializable {
     private boolean editingInProcess = false;
     private boolean additionInProcess = false;
     private ResourceBundle messages = PreferenceLoader.getLanguageBundle();
-
-    private String $(String key) {
-        return messages.getString(key);
-    }
     @FXML
     private MenuBar menubar;
     @FXML
     private Button editorbuttonSave, editorbuttonNew, editorbuttonEdit, editorbuttonImport;
     @FXML
-    private TextField searchBox, _editName, _editAuthor, _editPath, _editType, _editFilesize, _editTags;
+    private TextField searchBox, _editName, _editAuthor, _editPath, _editType, _editTags;
     @FXML
     private Text _assetName, _assetAuthor, _assetPath, _assetCategory, _assetFilesize, _assetType, _assetTags;
-    private TableView<Asset> assetTable;
+    private Text[] assetFields;
     @FXML
     TableColumn<Asset, String> columnType, columnName, columnPath;
     @FXML
@@ -52,7 +46,17 @@ public class MantleController implements Initializable {
     private Categories assetCategories = PreferenceLoader.getCategories();
     @FXML
     private ComboBox<String> editCategoryCombo;
+    public TextField[] editorFields;
 
+
+    /**
+     * Function called when the application starts
+     * It was used to hide the Mac menubar
+     * Now it just calls the init function.
+     *
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         String macMenu = System.getProperty("apple.laf.useScreenMenuBar");
@@ -60,16 +64,36 @@ public class MantleController implements Initializable {
             BProot.getChildren().remove(menubar);
         }*/
         init();
+
     }
 
     /**
-     * Menu buttons
+     * Little helper to get strings from localization file
+     * Made this just because I wanted the code to be more readable
+     *
+     * @param key String key that points to resources/localization/lang_xx_XX.properties
+     *            Language is defined in the main function for now
+     * @return The string in the .properties file
+     */
+    private String $(String key) {
+        return messages.getString(key);
+    }
+
+    /**
+     * Creates a new collection
+     * Right now just shows the splash screen
+     *
+     * @param event
      */
     @FXML
     public void menuActionNew(ActionEvent event) {
         eventHandler.OpenNewWindow(event, "splash", "Mantle - New", false);
     }
 
+    /**
+     * Opens a collection to the view
+     * Not yet working, just shows the filechooser
+     */
     @FXML
     public void menuActionOpen() {
         FileChooser fileChooser = new FileChooser();
@@ -80,31 +104,59 @@ public class MantleController implements Initializable {
         fileChooser.showOpenDialog(menubar.getScene().getWindow());
     }
 
+    /**
+     * Saves the collection with old name
+     * Not yet working
+     */
     @FXML
     public void menuActionSave() {
         eventHandler.saveData("Uh oh");
     }
 
+    /**
+     * Saves the collection with custom name
+     * Not yet working
+     */
     @FXML
     public void menuActionSaveAs() {
         eventHandler.error($("errorNotInUse"));
     }
 
+    /**
+     * Shows the about window
+     *
+     * @param event
+     */
     @FXML
     public void menuActionAbout(ActionEvent event) {
         eventHandler.OpenNewWindow(event, "about", "Mantle - " + $("about"), false);
     }
 
+    /**
+     * Closes the collection
+     * Not yet working
+     */
     @FXML
     public void menuActionClose() {
         eventHandler.error($("errorNotInUse"));
     }
 
+    /**
+     * Exits the app
+     */
     @FXML
     public void menuActionQuit() {
         Platform.exit();
     }
 
+    /**
+     * Functionality for the search button
+     * Works also when pressing enter on the searh bar
+     * <p>
+     * Uses regex to check if the input matches a number
+     *
+     * @param ae
+     */
     @FXML
     public void searchActionEvent(ActionEvent ae) {
         String searchInput = searchBox.getText();
@@ -124,12 +176,14 @@ public class MantleController implements Initializable {
         }
     }
 
-    public void newAssetVisibilityToggles() {
-        editorbuttonEdit.setVisible(!editorbuttonEdit.isVisible());
-        editorbuttonNew.setVisible(!editorbuttonNew.isVisible());
-        editorbuttonSave.setVisible(!editorbuttonSave.isVisible());
-    }
 
+    /**
+     * Imports a new file to the editor
+     * Creates a new asset and makes it editable
+     * If asset is image, then shows the image in right pane
+     *
+     * @param actionEvent
+     */
     @FXML
     public void editorImportAction(ActionEvent actionEvent) {
         File file = fileHelper.importFile(menubar);
@@ -141,58 +195,84 @@ public class MantleController implements Initializable {
             _editPath.setText(filepath);
             _assetFilesize.setText(fileSize);
             fileHelper.setImage(assetImage, filepath);
-
         }
     }
 
+    /**
+     * The action for pressing NEW-button
+     *
+     * @param event
+     */
     @FXML
     private void newButtonAction(ActionEvent event) {
         editingInProcess = false;
         additionInProcess = true;
-        clearEditor();
-        toggleEditorVisibility();
-        newAssetVisibilityToggles();
-        Asset newAsset = new Asset();
-        try {
-            collection.add(newAsset);
-        } catch (HandleException e) {
-            eventHandler.error("Problems with creating a new asset " + e.getMessage());
-            return;
-        }
-        search(newAsset.getId());
+        clearAssetDisplayViewEditor();
+        toggleAssetDisplayViewEditorVisibility();
+        toggleAssetDisplayViewEditorButtonVisibility();
+        //Adds a new asset and selects it
+        search(collection.newAsset());
     }
 
+    /**
+     * Updates the asset details
+     * The same function is called when you
+     * save a new asset or edit and save old one
+     *
+     * @param event
+     * @throws HandleException
+     */
     @FXML
     private void saveButtonAction(ActionEvent event) throws HandleException {
         Asset asset = chooserAssets.getSelectedObject();
         updateAsset(asset);
-        toggleEditorVisibility();
-        editorbuttonEdit.setVisible(!editorbuttonEdit.isVisible());
-        editorbuttonNew.setVisible(!editorbuttonNew.isVisible());
-        editorbuttonSave.setVisible(!editorbuttonSave.isVisible());
-        showAsset();
+        toggleAssetDisplayViewEditorVisibility();
+        toggleAssetDisplayViewEditorButtonVisibility();
+        updateAssetDisplayView();
+        //Selects the saved asset
         search(asset.getId());
     }
 
+    /**
+     * Functionality when the EDIT-button is pressed
+     *
+     * @param event
+     */
     @FXML
     private void editButtonAction(ActionEvent event) {
-        toggleEditorVisibility();
+        toggleAssetDisplayViewEditorVisibility();
+        toggleAssetDisplayViewEditorButtonVisibility();
         editingInProcess = true;
         additionInProcess = false;
-        editorbuttonEdit.setVisible(!editorbuttonEdit.isVisible());
-        editorbuttonNew.setVisible(!editorbuttonNew.isVisible());
-        editorbuttonSave.setVisible(!editorbuttonSave.isVisible());
     }
 
+    /**
+     * Right now, well it does nothing
+     * Should cancel the editing process for the asset
+     *
+     * @param actionEvent
+     */
     @FXML
     public void cancelButtonAction(ActionEvent actionEvent) {
     }
 
+    /**
+     * In the future, will be used to style the app
+     * to show something is being dragged to it
+     *
+     * @param event
+     */
     @FXML
     private void mantleBaseDragDetected(DragEvent event) {
         System.out.print("Test");
     }
 
+    /**
+     * In the future, should create a new asset when file is dragged to the app
+     * Right now, it does not work
+     *
+     * @param event
+     */
     @FXML
     private void mantleBaseDragDropped(DragEvent event) {
         System.out.print("Test");
@@ -203,6 +283,11 @@ public class MantleController implements Initializable {
     public void mantleBaseDragEntered(DragEvent dragEvent) {
     }
 
+    /**
+     * Selects the asset by ID
+     *
+     * @param idNum Asset ID
+     */
     protected void search(int idNum) {
         chooserAssets.clear();
         int index = 0;
@@ -214,7 +299,11 @@ public class MantleController implements Initializable {
         chooserAssets.getSelectionModel().select(index);
     }
 
-    protected void showAsset() {
+    /**
+     * Updates the right pane to show the asset details
+     * If asset edited is null, then it breaks from the function
+     */
+    protected void updateAssetDisplayView() {
         Asset asset = chooserAssets.getSelectedObject();
         String taglist = collection.getAssetTags(asset.getId());
         if (asset == null) {
@@ -230,64 +319,83 @@ public class MantleController implements Initializable {
         fileHelper.setImage(assetImage, asset.getPath());
     }
 
+    /**
+     * Updates the asset being edited
+     * Used both when creating asset and modifying asset
+     * <p>
+     * Get's the values to be set to the asset from editable fields
+     * <p>
+     * When creating, modifies new empty asset
+     * When editing, modifies existing asset
+     *
+     * @param asset Asset to be modified
+     * @throws HandleException
+     */
     protected void updateAsset(Asset asset) throws HandleException {
         //String errorStyle = "-fx-border-color: red ; -fx-border-width: 2px ;";
-        Category assetCat = null;
-        for (int i = 0; i < assetCategories.getCategoryArray().length; i++) {
-            if (assetCategories.getCategoryArray()[i].toString() == editCategoryCombo.getValue()) {
-                assetCat = assetCategories.getCategoryArray()[i];
-            } else {
-                assetCat = assetCategories.getCategoryArray()[0];
-            }
-        }
+        asset.setCategory(assetCategories, editCategoryCombo);
         asset.setFilename(_editName.getText());
         asset.setFilepath(_editPath.getText());
         asset.setAuthor(_editAuthor.getText());
         asset.setType(_editType.getText());
-        asset.setCategory(assetCat);
         asset.setSize(_assetFilesize.getText());
         collection.addTag(asset, _editTags.getText());
     }
 
-    public void clearEditor() {
-        _editName.setText("");
-        _editAuthor.setText("");
-        _editPath.setText("");
-        _editType.setText("");
-        _editFilesize.setText("");
+    /**
+     * Clears the editor from asset's details
+     */
+    public void clearAssetDisplayViewEditor() {
+        for (TextField field : editorFields) {
+            field.setText("");
+        }
         _assetFilesize.setText("");
-        _editTags.setText("");
         assetImage.setImage(null);
     }
 
-    public void toggleEditorVisibility() {
-        _assetName.setVisible(!_assetName.isVisible());
-        _editName.setVisible(!_editName.isVisible());
-        _assetPath.setVisible(!_assetPath.isVisible());
-        _editPath.setVisible(!_editPath.isVisible());
+    /**
+     * Toggles visibility of elements in the left pane
+     * Uses loop to hide the all elements neatly
+     */
+    public void toggleAssetDisplayViewEditorVisibility() {
+        for (TextField field : editorFields) {
+            field.setVisible(!field.isVisible());
+        }
+        for (Text text : assetFields) {
+            text.setVisible(!text.isVisible());
+        }
         editorbuttonImport.setVisible(!editorbuttonImport.isVisible());
-        _assetAuthor.setVisible(!_assetAuthor.isVisible());
-        _editAuthor.setVisible(!_editAuthor.isVisible());
-        _assetCategory.setVisible(!_assetCategory.isVisible());
-        _editType.setVisible(!_editType.isVisible());
-        _assetType.setVisible(!_assetType.isVisible());
         editCategoryCombo.setVisible(!editCategoryCombo.isVisible());
-        _assetTags.setVisible(!_assetTags.isVisible());
-        _editTags.setVisible(!_editTags.isVisible());
     }
 
+    /**
+     * Toggles the visibility of editor buttons
+     * Due some cases, this is taken out from toggleAssetDisplayViewEditorVisibility()
+     */
+    public void toggleAssetDisplayViewEditorButtonVisibility() {
+        editorbuttonEdit.setVisible(!editorbuttonEdit.isVisible());
+        editorbuttonNew.setVisible(!editorbuttonNew.isVisible());
+        editorbuttonSave.setVisible(!editorbuttonSave.isVisible());
+    }
+
+    /**
+     * Init function called from initialized for cleaness
+     */
     protected void init() {
         chooserAssets.clear();
-        chooserAssets.addSelectionListener(e -> showAsset());
-        columnType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        columnName.setCellValueFactory(new PropertyValueFactory<>("filename"));
-        columnPath.setCellValueFactory(new PropertyValueFactory<>("filepath"));
-        System.out.println(assetCategories.getCategoryArray()[1]);
+        chooserAssets.addSelectionListener(e -> updateAssetDisplayView());
+        editorFields = new TextField[]{_editName, _editAuthor, _editPath, _editType, _editTags};
+        assetFields = new Text[]{_assetName, _assetAuthor, _assetPath, _assetCategory, _assetType, _assetTags};
         for (int i = 0; i < assetCategories.getCategoryArray().length; i++) {
             editCategoryCombo.getItems().add(assetCategories.getCategoryArray()[i].toString());
         }
     }
 
+    /**
+     * Sets the collection used in the UI
+     *
+     * @param collection
+     */
     public void setCollection(Collection collection) {
         this.collection = collection;
     }

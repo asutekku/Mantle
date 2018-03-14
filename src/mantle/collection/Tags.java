@@ -3,7 +3,12 @@ package mantle.collection;
 import java.util.*;
 
 /**
- * Tags
+ * Tags class
+ *
+ * Collection has one tags class
+ * There are no limits how many tags the collection can has
+ *
+ *
  */
 public class Tags{
     private int count = 0;
@@ -27,6 +32,9 @@ public class Tags{
         count ++;
     }
 
+    /**
+     * @return Returns the list containing all the Tags the collection has
+     */
     public List<Tag> getTags() {
         return tags;
     }

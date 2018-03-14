@@ -1,5 +1,14 @@
 package mantle.collection;
 
+/**
+ * Tag class
+ *
+ * Stores the Tag ID, Asset ID and Tag's name
+ *
+ * User will be able to add new tags to the collections
+ *
+ * @Author Aku Mäkelä
+ */
 public class Tag {
     private int tagID;
     private int assetID;

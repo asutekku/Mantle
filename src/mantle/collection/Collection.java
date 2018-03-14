@@ -1,7 +1,12 @@
 package mantle.collection;
 
+import mantle.util.controllers.eventHandler;
+
 /**
  * Collection-class
+ *
+ * Used to store the assets and tags used in the collection
+ * For now, there's no way to save the collection
  *
  * @author Aku Mäkelä
  * @version 0.1, 28.02.2018
@@ -31,6 +36,9 @@ public class Collection {
         return tags.getCount();
     }
 
+    /**
+     * @return Tags added to the collection
+     */
     public Tags getTags() {
         return tags;
     }
@@ -68,13 +76,14 @@ public class Collection {
     public void addTag(Asset asset, String tagName) throws HandleException {
         Tag tag = new Tag(tagName);
         tag.setAssetID(asset.getId());
-        asset.setTag(tag.getTagID());
+        //asset.setTag(tag.getTagID());
         tags.addNew(tag);
     }
 
 
     /**
      * Returns the tags assigned to asset in a string
+     * This function combines the assets and tags
      *
      * @param assetId asset which you want the tags from
      * @return String containing the tags
@@ -82,16 +91,10 @@ public class Collection {
      */
     public String getAssetTags(int assetId) throws IndexOutOfBoundsException {
         StringBuilder output = new StringBuilder();
-        int tagCount = assets.get(assetId).getTagCount();
-        if (tagCount != 0) {
-            for (int i = 0; i < tagCount; i++) {
-                for (int j = 0; j < tags.getTags().size(); j++) {
-                    int tagAssetID = tags.getTags().get(j).getAssetID();
-                    if (tagAssetID == assetId) {
-                        String tagName = tags.getTags().get(j).getTagName();
-                        output.append(tagName + ", ");
-                    }
-                }
+        for (Tag tag : tags.getTags()){
+            if (tag.getAssetID() == assetId) {
+                String tagName = tag.getTagName();
+                output.append(tagName + " ");
             }
         }
         return output.toString();
@@ -108,6 +111,21 @@ public class Collection {
         return assets.get(i);
     }
 
+    /**
+     * Creates a new asset and assigns it to the collection
+     *
+     * @return assetID if creation is valid, -1 if it fails
+     */
+    public int newAsset() {
+        Asset newAsset = new Asset();
+        try {
+            this.add(newAsset);
+            return newAsset.getId();
+        } catch (HandleException e) {
+            eventHandler.error("Problems with creating a new asset " + e.getMessage());
+            return -1;
+        }
+    }
 
     /**
      * Reads the collection from filename
@@ -120,7 +138,6 @@ public class Collection {
         assets.readFromFile(fileName);
     }
 
-
     /**
      * Saves the collection to file
      * Not yet implemented
@@ -130,8 +147,4 @@ public class Collection {
     public void save() throws HandleException {
         assets.save();
     }
-
-    public static void main(String args[]) {
-    }
-
 }
