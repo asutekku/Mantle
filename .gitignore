@@ -70,3 +70,12 @@ fabric.properties
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+files.txt
+kuvat/info.png
+kuvat/main.png
+kuvat/main_newAsset.png
+kuvat/main_newAssetDone.png
+kuvat/Main_newAssetEdit.png
+kuvat/main_newAssetEditDone.png
+kuvat/main_newAssetFilled.png
+kuvat/splash.png
