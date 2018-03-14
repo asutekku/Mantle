@@ -17,15 +17,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.fxml.Initializable;
 
-import fi.jyu.mit.fxgui.ListChooser;
 import mantle.util.fileHelper;
 import mantle.util.preferences.PreferenceLoader;
 
 public class MantleController implements Initializable {
 
-    private boolean editingInProcess = false;
-    private boolean additionInProcess = false;
-    private ResourceBundle messages = PreferenceLoader.getLanguageBundle();
     @FXML
     private MenuBar menubar;
     @FXML
@@ -34,19 +30,20 @@ public class MantleController implements Initializable {
     private TextField searchBox, _editName, _editAuthor, _editPath, _editType, _editTags;
     @FXML
     private Text _assetName, _assetAuthor, _assetPath, _assetCategory, _assetFilesize, _assetType, _assetTags;
-    private Text[] assetFields;
-    @FXML
-    TableColumn<Asset, String> columnType, columnName, columnPath;
     @FXML
     private ImageView assetImage;
-    private String CollectionName = "Sample";
-    private Collection collection = new Collection();
-    @FXML
-    private ListChooser<Asset> chooserAssets;
-    private Categories assetCategories = PreferenceLoader.getCategories();
     @FXML
     private ComboBox<String> editCategoryCombo;
+    @FXML
+    private ListView<Asset> assetList;
     public TextField[] editorFields;
+    private Text[] assetFields;
+    private String CollectionName = "Sample";
+    private Collection collection = new Collection();
+    private Categories assetCategories = PreferenceLoader.getCategories();
+    private boolean editingInProcess = false;
+    private boolean additionInProcess = false;
+    private ResourceBundle messages = PreferenceLoader.getLanguageBundle();
 
 
     /**
@@ -224,7 +221,7 @@ public class MantleController implements Initializable {
      */
     @FXML
     private void saveButtonAction(ActionEvent event) throws HandleException {
-        Asset asset = chooserAssets.getSelectedObject();
+        Asset asset = assetList.getSelectionModel().getSelectedItem();
         updateAsset(asset);
         toggleAssetDisplayViewEditorVisibility();
         toggleAssetDisplayViewEditorButtonVisibility();
@@ -289,14 +286,14 @@ public class MantleController implements Initializable {
      * @param idNum Asset ID
      */
     protected void search(int idNum) {
-        chooserAssets.clear();
+        assetList.getItems().clear();
         int index = 0;
         for (int i = 0; i < collection.getAssetCount(); i++) {
             Asset asset = collection.getAsset(i);
             if (asset.getId() == idNum) index = i;
-            chooserAssets.add(asset.getName(), asset);
+            assetList.getItems().add(asset);
         }
-        chooserAssets.getSelectionModel().select(index);
+        assetList.getSelectionModel().select(index);
     }
 
     /**
@@ -304,7 +301,7 @@ public class MantleController implements Initializable {
      * If asset edited is null, then it breaks from the function
      */
     protected void updateAssetDisplayView() {
-        Asset asset = chooserAssets.getSelectedObject();
+        Asset asset = assetList.getSelectionModel().getSelectedItem();
         String taglist = collection.getAssetTags(asset.getId());
         if (asset == null) {
             return;
@@ -380,10 +377,11 @@ public class MantleController implements Initializable {
 
     /**
      * Init function called from initialized for cleaness
+     * Listener is modified from SO
      */
     protected void init() {
-        chooserAssets.clear();
-        chooserAssets.addSelectionListener(e -> updateAssetDisplayView());
+        assetList.getItems().clear();
+        assetList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> updateAssetDisplayView());
         editorFields = new TextField[]{_editName, _editAuthor, _editPath, _editType, _editTags};
         assetFields = new Text[]{_assetName, _assetAuthor, _assetPath, _assetCategory, _assetType, _assetTags};
         for (int i = 0; i < assetCategories.getCategoryArray().length; i++) {

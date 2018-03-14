@@ -4,8 +4,6 @@ import javafx.scene.control.ComboBox;
 import mantle.util.preferences.PreferenceLoader;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Asset class
@@ -23,7 +21,7 @@ import java.util.List;
 public class Asset {
     private int idNumber;
     private String filepath;
-    private String filename;
+    private String name;
     private String author;
     private Category category = new Category();
     private String type;
@@ -34,11 +32,11 @@ public class Asset {
      * @return Returns the name of the assset
      */
     public String getName() {
-        return filename;
+        return name;
     }
 
     /**
-     * @return The path of the asset filename included
+     * @return The path of the asset name included
      */
     public String getPath() {
         return filepath;
@@ -84,7 +82,7 @@ public class Asset {
      */
     public boolean setFilename(String filename) {
         if (filename != null && !filename.isEmpty()) {
-            this.filename = filename;
+            this.name = filename;
             return true;
         }
         return false;
@@ -167,7 +165,7 @@ public class Asset {
      * Default constructor
      */
     public Asset() {
-        this.filename = "New asset";
+        this.name = "New asset";
         this.filepath = "Undefined";
         this.author = "Undefined";
         this.category = PreferenceLoader.getCategoryArray()[0]; // Basic category
@@ -179,14 +177,14 @@ public class Asset {
      * Constructor with parameters
      * Used very rarely
      *
-     * @param filename Name for the asset
+     * @param name Name for the asset
      * @param filepath Path for the asset
      * @param category CategoryPreferences of the asset
      * @param size     Size of the asset
      * @param author   Asset author
      */
-    public Asset(String filename, String filepath, String author, Category category, String size) throws HandleException {
-        this.filename = filename;
+    public Asset(String name, String filepath, String author, Category category, String size) throws HandleException {
+        this.name = name;
         this.filepath = filepath;
         this.author = author;
         this.category = category;
@@ -199,7 +197,7 @@ public class Asset {
      * @param out where the details will be printed
      */
     public void print(PrintStream out) {
-        out.println(filename);
+        out.println(name);
     }
 
     /**
@@ -214,6 +212,11 @@ public class Asset {
         idNumber = nextValue;
         nextValue++;
         return idNumber;
+    }
+
+    @Override
+    public String toString(){
+        return this.name;
     }
 
     /**
