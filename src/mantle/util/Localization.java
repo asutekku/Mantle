@@ -10,6 +10,7 @@ public class Localization {
     private Locale currentLocale;
     private ResourceBundle locale;
 
+
     public Locale getCurrentLocale() {
         return currentLocale;
     }

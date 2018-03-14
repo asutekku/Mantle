@@ -1,6 +1,10 @@
 package mantle.collection;
 
+import mantle.util.preferences.PreferenceLoader;
+
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Asset
@@ -13,10 +17,11 @@ public class Asset {
     private String filepath;
     private String filename;
     private String author;
-    private Tags tags = new Tags();
+    private List<Integer> tags = new ArrayList<Integer>();
     private Category category = new Category();
+    private String type;
     private String size;
-    private static int nextValue = 1;
+    private static int nextValue = 0;
 
     /**
      * @return Returns the name of the assset
@@ -49,8 +54,12 @@ public class Asset {
     /**
      * @return The tags assigned to the asset
      */
-    public Tag getTags(int index) throws IndexOutOfBoundsException {
-        return tags.get(index);
+    public List<Integer> getTags() throws IndexOutOfBoundsException {
+        return tags;
+    }
+
+    public int getTagCount() {
+        return tags.size();
     }
 
     /**
@@ -91,8 +100,8 @@ public class Asset {
     /**
      * @param tag The tag to be added to the asset
      */
-    public void setTag(Tag tag) throws HandleException {
-        tags.addNew(tag);
+    public void setTag(int tagID) throws HandleException {
+        tags.add(tagID);
     }
 
     /**
@@ -106,23 +115,26 @@ public class Asset {
      * Default constructor
      */
     public Asset() {
-
+        this.filename = "New asset";
+        this.filepath = "Undefined";
+        this.author = "Undefined";
+        this.category = PreferenceLoader.getCategoryArray()[0]; // Basic category
+        this.type = "Undefined";
+        this.size = "Undefined";
     }
 
     /**
      * @param filename Name for the asset
      * @param filepath Path for the asset
      * @param category CategoryPreferences of the asset
-     * @param type     CategoryPreferences of the asset
      * @param size     Size of the asset
      * @param author   Asset author
      */
-    public Asset(String filename, String filepath, String author, Category category, Tag tag, String size) throws HandleException {
+    public Asset(String filename, String filepath, String author, Category category, String size) throws HandleException {
         this.filename = filename;
         this.filepath = filepath;
         this.author = author;
         this.category = category;
-        this.tags.addNew(tag);
         this.size = size;
     }
 
@@ -132,11 +144,7 @@ public class Asset {
      * @param out where the details will be printed
      */
     public void print(PrintStream out) {
-        out.println(String.format("%03d", idNumber, 3) + "  " + filepath + "  "
-                + filename);
-        out.println("  " + category + "  " + category + " " + tags);
-        out.println(" Filesize: " + size);
-        out.println("  " + author);
+        out.println(filename);
     }
 
 
@@ -178,4 +186,7 @@ public class Asset {
 
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
 }

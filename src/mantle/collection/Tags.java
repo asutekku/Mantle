@@ -1,13 +1,13 @@
 package mantle.collection;
 
+import java.util.*;
+
 /**
  * Tags
  */
-public class Tags {
-    private static final int max_tags = 16;
+public class Tags{
     private int count = 0;
-    private Tag tags[] = new Tag[max_tags];
-
+    private final List<Tag> tags = new ArrayList<>();
 
     /**
      * Default constructor
@@ -17,36 +17,40 @@ public class Tags {
     public Tags() {
     }
 
-
-    public void addNew(Tag tag) throws HandleException {
-        if (count >= tags.length) throw new HandleException("Too much tags");
-        tags[count] = tag;
-        count++;
+    /**
+     * Add new tag to the tags list
+     * @param tag Tag to be added
+     */
+    public void addNew(Tag tag) {
+        tag.register();
+        tags.add(tag);
+        count ++;
     }
 
+    public List<Tag> getTags() {
+        return tags;
+    }
 
     /**
      * Returns the nth Tag
+     *
      * @param i nth tag to get
      * @return The tag to be returned
      * @throws IndexOutOfBoundsException nth is outside of the count of tags
      */
     public Tag get(int i) throws IndexOutOfBoundsException {
-        if (i < 0 || count <= i)
+        if (i < 0 || tags.size() <= i)
             throw new IndexOutOfBoundsException("Illegal index: " + i);
-        return tags[i];
+        return tags.get(i);
     }
 
 
     /**
      * Returns the count of tags
+     *
      * @return count of tags
      */
     public int getCount() {
         return count;
     }
-
-    public static void main(String args[]) {
-    }
-
 }

@@ -1,13 +1,16 @@
 package mantle.collection;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Collection of assets
  */
-public class Assets {
-    private static final int max_assets = 512;
-    private int count = 0;
+public class Assets  implements Iterable<Asset> {
+    private static int count = 0;
     private String filename = "";
-    private Asset items[] = new Asset[max_assets];
+    private final List<Asset> items = new ArrayList<Asset>();
 
 
     /**
@@ -23,8 +26,7 @@ public class Assets {
      * @throws HandleException Uh oh
      */
     public void addNew(Asset asset) throws HandleException {
-        if (count >= items.length) throw new HandleException("Too much assets");
-        items[count] = asset;
+        items.add(asset);
         count++;
     }
 
@@ -37,13 +39,11 @@ public class Assets {
      * @throws IndexOutOfBoundsException out of bounds
      */
     public Asset get(int i) throws IndexOutOfBoundsException {
-        if (i < 0 || count <= i)
-            throw new IndexOutOfBoundsException("Illegal index: " + i);
-        return items[i];
+        return items.get(i);
     }
 
     /**
-     * Returns asset with ID
+     * Returns asset by ID
      *
      * @param ID to be searched
      * @return asset with ID
@@ -77,4 +77,8 @@ public class Assets {
         return count;
     }
 
+    @Override
+    public Iterator<Asset> iterator() {
+        return null;
+    }
 }

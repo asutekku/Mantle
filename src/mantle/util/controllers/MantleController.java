@@ -12,7 +12,6 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import mantle.collection.*;
-import mantle.util.Localization;
 
 import javafx.event.ActionEvent;
 import javafx.application.Platform;
@@ -24,26 +23,23 @@ import fi.jyu.mit.fxgui.ListChooser;
 import mantle.util.fileHelper;
 import mantle.util.preferences.PreferenceLoader;
 
-
 public class MantleController implements Initializable {
 
     private boolean editingInProcess = false;
     private boolean additionInProcess = false;
-    private Localization locale = new Localization("en", "US");
-    private ResourceBundle messages = locale.getLocale();
+    private ResourceBundle messages = PreferenceLoader.getLanguageBundle();
 
     private String $(String key) {
         return messages.getString(key);
     }
-
     @FXML
     private MenuBar menubar;
     @FXML
     private Button editorbuttonSave, editorbuttonNew, editorbuttonEdit, editorbuttonImport;
     @FXML
-    private TextField searchBox, _editName, _editAuthor, _editPath, _editCategory, _editFilesize, _editTags;
+    private TextField searchBox, _editName, _editAuthor, _editPath, _editType, _editFilesize, _editTags;
     @FXML
-    private Text _assetName, _assetAuthor, _assetPath, _assetCollection, _assetFilesize, _assetType, _assetTags;
+    private Text _assetName, _assetAuthor, _assetPath, _assetCategory, _assetFilesize, _assetType, _assetTags;
     private TableView<Asset> assetTable;
     @FXML
     TableColumn<Asset, String> columnType, columnName, columnPath;
@@ -110,19 +106,22 @@ public class MantleController implements Initializable {
     }
 
     @FXML
-    public void onSearchEnter(ActionEvent ae) {
+    public void searchActionEvent(ActionEvent ae) {
         String searchInput = searchBox.getText();
+        int idNum = 0;
         if (searchInput.isEmpty()) {
             eventHandler.error($("errorInputSomething"));
+        } else if (searchInput.matches("\\d+")) {
+            idNum = Integer.parseInt(searchInput);
+            search(idNum);
         } else {
             Object[] errorMsgArg = {searchInput};
             MessageFormat formatter = new MessageFormat("");
-            formatter.setLocale(locale.getCurrentLocale());
+            formatter.setLocale(PreferenceLoader.getLanguageBundle().getLocale());
             formatter.applyPattern(messages.getString("errorSearchInput"));
             String output = formatter.format(errorMsgArg);
             eventHandler.error(output);
         }
-
     }
 
     public void newAssetVisibilityToggles() {
@@ -132,30 +131,8 @@ public class MantleController implements Initializable {
     }
 
     @FXML
-    private void importButtonAction(ActionEvent event) {
-        if (!editingInProcess) {
-            String filepath;
-            String fileSize;
-            File importedFile = importFile();
-            if (importedFile != null) {
-                clearEditor();
-                filepath = fileHelper.getPath(importedFile);
-                fileSize = fileHelper.getSize(importedFile);
-                _editPath.setText(filepath);
-                _editFilesize.setText(fileSize);
-                setImage(assetImage, filepath);
-            }
-            newAssetVisibilityToggles();
-            toggleEditorVisibility();
-            editingInProcess = true;
-        } else {
-            eventHandler.error($("errorFinishBeforeAddingNew"));
-        }
-    }
-
-    @FXML
     public void editorImportAction(ActionEvent actionEvent) {
-        File file = importFile();
+        File file = fileHelper.importFile(menubar);
         String filepath;
         String fileSize;
         if (file != null) {
@@ -163,57 +140,38 @@ public class MantleController implements Initializable {
             fileSize = fileHelper.getSize(file);
             _editPath.setText(filepath);
             _assetFilesize.setText(fileSize);
-            setImage(assetImage, filepath);
+            fileHelper.setImage(assetImage, filepath);
 
-        }
-    }
-
-    private File importFile() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter($("filechooserAllFiles"), "*.*"));
-        fileChooser.setTitle($("filechooserImportTitle"));
-        return fileChooser.showOpenDialog(menubar.getScene().getWindow());
-    }
-
-    public void setImage(ImageView imgview, String path) {
-        if (path != null && !path.isEmpty()) {
-            Image image = new Image(path);
-            imgview.setImage(image);
-            imgview.fitWidthProperty();
-        } else {
-            imgview.setImage(null);
         }
     }
 
     @FXML
     private void newButtonAction(ActionEvent event) {
-        clearEditor();
         editingInProcess = false;
         additionInProcess = true;
+        clearEditor();
         toggleEditorVisibility();
         newAssetVisibilityToggles();
+        Asset newAsset = new Asset();
+        try {
+            collection.add(newAsset);
+        } catch (HandleException e) {
+            eventHandler.error("Problems with creating a new asset " + e.getMessage());
+            return;
+        }
+        search(newAsset.getId());
     }
 
     @FXML
     private void saveButtonAction(ActionEvent event) throws HandleException {
-        if (additionInProcess && !editingInProcess) {
-            if (newAsset()) {
-                toggleEditorVisibility();
-                editorbuttonEdit.setVisible(!editorbuttonEdit.isVisible());
-                editorbuttonNew.setVisible(!editorbuttonNew.isVisible());
-                editorbuttonSave.setVisible(!editorbuttonSave.isVisible());
-            }
-        } else if (!additionInProcess && editingInProcess) {
-            Asset asset = chooserAssets.getSelectedObject();
-            updateAsset(asset);
-            toggleEditorVisibility();
-            editorbuttonEdit.setVisible(!editorbuttonEdit.isVisible());
-            editorbuttonNew.setVisible(!editorbuttonNew.isVisible());
-            editorbuttonSave.setVisible(!editorbuttonSave.isVisible());
-            showAsset();
-        }
-
+        Asset asset = chooserAssets.getSelectedObject();
+        updateAsset(asset);
+        toggleEditorVisibility();
+        editorbuttonEdit.setVisible(!editorbuttonEdit.isVisible());
+        editorbuttonNew.setVisible(!editorbuttonNew.isVisible());
+        editorbuttonSave.setVisible(!editorbuttonSave.isVisible());
+        showAsset();
+        search(asset.getId());
     }
 
     @FXML
@@ -258,36 +216,23 @@ public class MantleController implements Initializable {
 
     protected void showAsset() {
         Asset asset = chooserAssets.getSelectedObject();
-        Tag taglist = asset.getTags(0);
+        String taglist = collection.getAssetTags(asset.getId());
         if (asset == null) {
             return;
         }
         _assetName.setText(asset.getName());
         _assetAuthor.setText(asset.getAuthor());
-        _assetCollection.setText(asset.getCategory().toString());
+        _assetCategory.setText(asset.getCategory().toString());
         _assetPath.setText(asset.getPath());
         _assetFilesize.setText(asset.getSize());
-        _assetTags.setText(taglist.toString());
-        _assetType.setText(asset.getCategory().toString());
-        setImage(assetImage, asset.getPath());
+        _assetTags.setText(taglist);
+        _assetType.setText(_editType.getText());
+        fileHelper.setImage(assetImage, asset.getPath());
     }
 
     protected void updateAsset(Asset asset) throws HandleException {
         //String errorStyle = "-fx-border-color: red ; -fx-border-width: 2px ;";
-        Category assetCat;
-        String assetName = _editName.getText(),
-                assetPath = _editPath.getText(),
-                assetAuthor = _editAuthor.getText(),
-                assetType = _assetCollection.getText(),
-                assetSize = _assetFilesize.getText();
-        asset.setFilename(assetName);
-        asset.setFilepath(assetPath);
-        asset.setAuthor(assetAuthor);
-        asset.setSize(assetSize);
-        Tag tags = new Tag(_editTags.getText());
-        tags.setAssetID(asset.getId());
-        tags.register();
-        asset.setTag(tags);
+        Category assetCat = null;
         for (int i = 0; i < assetCategories.getCategoryArray().length; i++) {
             if (assetCategories.getCategoryArray()[i].toString() == editCategoryCombo.getValue()) {
                 assetCat = assetCategories.getCategoryArray()[i];
@@ -295,60 +240,20 @@ public class MantleController implements Initializable {
                 assetCat = assetCategories.getCategoryArray()[0];
             }
         }
-    }
-
-    protected boolean newAsset() throws HandleException {
-        boolean success = false;
-        String errorStyle = "-fx-border-color: red ; -fx-border-width: 2px ;";
-        Category assetCat = null;
-        String assetName = _editName.getText(),
-                assetPath = _editPath.getText(),
-                assetAuthor = _editAuthor.getText(),
-                assetType = _assetCollection.getText(),
-                assetSize = _assetFilesize.getText();
-        if (assetName == null || assetName.isEmpty()) {
-            _editName.setStyle(errorStyle);
-        }
-        if (assetPath == null || assetPath.isEmpty()) {
-            _editPath.setStyle(errorStyle);
-        }
-        if (assetAuthor == null || assetAuthor.isEmpty()) {
-            _editAuthor.setStyle(errorStyle);
-        }
-        if (assetName != null && !assetName.isEmpty()) {
-            Tag newTag = new Tag(_editTags.getText());
-            for (int i = 0; i < assetCategories.getCategoryArray().length; i++) {
-                if (assetCategories.getCategoryArray()[i].toString() == editCategoryCombo.getValue()) {
-                    assetCat = assetCategories.getCategoryArray()[i];
-                    break;
-                } else {
-                    assetCat = assetCategories.getCategoryArray()[0];
-                }
-            }
-            Asset newAsset = new Asset(assetName, assetPath, assetAuthor, assetCat, newTag, assetSize);
-            newTag.setAssetID(newAsset.getId());
-            newAsset.register();
-            newTag.register();
-            try {
-                collection.add(newAsset);
-            } catch (HandleException e) {
-                eventHandler.error("Problems with creating a new asset " + e.getMessage());
-                success = false;
-            }
-            search(newAsset.getId());
-            success = true;
-        } else {
-            eventHandler.error($("errorGiveAssetName"));
-            success = false;
-        }
-        return success;
+        asset.setFilename(_editName.getText());
+        asset.setFilepath(_editPath.getText());
+        asset.setAuthor(_editAuthor.getText());
+        asset.setType(_editType.getText());
+        asset.setCategory(assetCat);
+        asset.setSize(_assetFilesize.getText());
+        collection.addTag(asset, _editTags.getText());
     }
 
     public void clearEditor() {
         _editName.setText("");
         _editAuthor.setText("");
         _editPath.setText("");
-        _editCategory.setText("");
+        _editType.setText("");
         _editFilesize.setText("");
         _assetFilesize.setText("");
         _editTags.setText("");
@@ -363,8 +268,8 @@ public class MantleController implements Initializable {
         editorbuttonImport.setVisible(!editorbuttonImport.isVisible());
         _assetAuthor.setVisible(!_assetAuthor.isVisible());
         _editAuthor.setVisible(!_editAuthor.isVisible());
-        _assetCollection.setVisible(!_assetCollection.isVisible());
-        _editCategory.setVisible(!_editCategory.isVisible());
+        _assetCategory.setVisible(!_assetCategory.isVisible());
+        _editType.setVisible(!_editType.isVisible());
         _assetType.setVisible(!_assetType.isVisible());
         editCategoryCombo.setVisible(!editCategoryCombo.isVisible());
         _assetTags.setVisible(!_assetTags.isVisible());
