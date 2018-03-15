@@ -67,7 +67,7 @@ public class Collection {
 
 
     /**
-     * Adds a new tag to the asset and adds the tag to the taglsit
+     * Adds a new tag to the asset and adds the tag to the taglist
      *
      * @param asset   Asset the tag will be assigned to
      * @param tagName The name of the tag that will be assigned
@@ -91,9 +91,10 @@ public class Collection {
      */
     public String getAssetTags(int assetId) throws IndexOutOfBoundsException {
         StringBuilder output = new StringBuilder();
-        for (Tag tag : tags.getTags()){
-            if (tag.getAssetID() == assetId) {
-                String tagName = tag.getTagName();
+        output.append("");
+        for (int i = 0; i < tags.getCount(); i++){
+            if (tags.getTags()[i].getAssetID() == assetId) {
+                String tagName = tags.getTags()[i].getTagName();
                 output.append(tagName + " ");
             }
         }

@@ -12,7 +12,8 @@ import java.util.*;
  */
 public class Tags{
     private int count = 0;
-    private final List<Tag> tags = new ArrayList<>();
+    private int max_tags = 32;
+    private final Tag[] tags = new Tag[max_tags];
 
     /**
      * Default constructor
@@ -28,14 +29,15 @@ public class Tags{
      */
     public void addNew(Tag tag) {
         tag.register();
-        tags.add(tag);
+        int tagID = tag.getTagID();
+        tags[tagID] = tag;
         count ++;
     }
 
     /**
      * @return Returns the list containing all the Tags the collection has
      */
-    public List<Tag> getTags() {
+    public Tag[] getTags() {
         return tags;
     }
 
@@ -47,9 +49,9 @@ public class Tags{
      * @throws IndexOutOfBoundsException nth is outside of the count of tags
      */
     public Tag get(int i) throws IndexOutOfBoundsException {
-        if (i < 0 || tags.size() <= i)
+        if (i < 0 || tags.length <= i)
             throw new IndexOutOfBoundsException("Illegal index: " + i);
-        return tags.get(i);
+        return tags[i];
     }
 
 

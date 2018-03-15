@@ -7,12 +7,12 @@ import java.io.*;
 
 /**
  * Asset class
- *
+ * <p>
  * Stores all the details required when creating an asset
- *
+ * <p>
  * User will be able to create new assets
  * (That's kind of point of the application)
- *
+ * <p>
  * The class will not store any Tags as that will be handled by the collection
  *
  * @author Aku Mäkelä
@@ -21,9 +21,10 @@ import java.io.*;
 public class Asset {
     private int idNumber;
     private String filepath;
+    private String fileName;
     private String name;
     private String author;
-    private Category category = new Category();
+    private Category category;
     private String type;
     private String size;
     private static int nextValue = 0;
@@ -68,6 +69,7 @@ public class Asset {
      * Right now it only checks if the path is empty
      *
      * @param filepath The filepath for the asset
+     * @return true or false depending on the result
      */
     public boolean setFilepath(String filepath) {
         if (filepath != null && !filepath.isEmpty()) {
@@ -79,6 +81,7 @@ public class Asset {
 
     /**
      * @param filename The name (Name) for the asset
+     * @return true or false depending on the result
      */
     public boolean setFilename(String filename) {
         if (filename != null && !filename.isEmpty()) {
@@ -90,6 +93,7 @@ public class Asset {
 
     /**
      * @param author The author of the asset
+     * @return true or false depending on the result
      */
     public boolean setAuthor(String author) {
         if (author != null && !author.isEmpty()) {
@@ -103,7 +107,7 @@ public class Asset {
      * Assigns a new type to the asset and checks if it goes through
      *
      * @param type Type to add
-     * @return
+     * @return true or false depending on the result
      */
     public boolean setType(String type) {
         if (type != null && !type.isEmpty()) {
@@ -118,25 +122,24 @@ public class Asset {
      * If category is not defined, category is Basic
      *
      * @param categories Categoryset to choose the category from
-     * @param combo Combobox to take the category from
+     * @param combo      Combobox to take the category from
      */
     public void setCategory(Categories categories, ComboBox<String> combo) {
         for (int i = 0; i < categories.getCategoryArray().length; i++) {
             if (categories.getCategoryArray()[i].toString() == combo.getValue()) {
                 setCategory(categories.getCategoryArray()[i]);
                 break;
-            } else {
-                setCategory(categories.getCategoryArray()[0]);
             }
+            setCategory(categories.getCategoryArray()[0]);
         }
     }
 
     /**
      * General set category when you have the precise category defined
      *
-     * @param category
+     * @param category The category for the asset
      */
-    public void setCategory(Category category){
+    public void setCategory(Category category) {
         this.category = category;
     }
 
@@ -144,7 +147,7 @@ public class Asset {
      * @param tagID The id of the tag to be assigned to the asset
 
     public void setTag(int tagID) throws HandleException {
-        tags.add(tagID);
+    tags.add(tagID);
     }*/
 
     /**
@@ -152,6 +155,7 @@ public class Asset {
      * Is boolean for easy checking if the set worked
      *
      * @param size Want to compress the file? Just input small filesize :^)
+     * @return true or false depending on the result
      */
     public boolean setSize(String size) {
         if (size != null && !size.isEmpty()) {
@@ -177,11 +181,12 @@ public class Asset {
      * Constructor with parameters
      * Used very rarely
      *
-     * @param name Name for the asset
+     * @param name     Name for the asset
      * @param filepath Path for the asset
      * @param category CategoryPreferences of the asset
      * @param size     Size of the asset
      * @param author   Asset author
+     * @throws HandleException Exception if the creation fails
      */
     public Asset(String name, String filepath, String author, Category category, String size) throws HandleException {
         this.name = name;
@@ -215,7 +220,7 @@ public class Asset {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.name;
     }
 
@@ -226,5 +231,13 @@ public class Asset {
      */
     public int getId() {
         return idNumber;
+    }
+
+    /**
+     * @param args Args if you want
+     */
+    public static void main(String[] args){
+        Asset newAsset = new Asset();
+        newAsset.setFilename("YO");
     }
 }

@@ -45,25 +45,6 @@ public class MantleController implements Initializable {
     private boolean additionInProcess = false;
     private ResourceBundle messages = PreferenceLoader.getLanguageBundle();
 
-
-    /**
-     * Function called when the application starts
-     * It was used to hide the Mac menubar
-     * Now it just calls the init function.
-     *
-     * @param location
-     * @param resources
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        String macMenu = System.getProperty("apple.laf.useScreenMenuBar");
-        /*if (macMenu != null && macMenu.equals("true")) {
-            BProot.getChildren().remove(menubar);
-        }*/
-        init();
-
-    }
-
     /**
      * Little helper to get strings from localization file
      * Made this just because I wanted the code to be more readable
@@ -80,7 +61,7 @@ public class MantleController implements Initializable {
      * Creates a new collection
      * Right now just shows the splash screen
      *
-     * @param event
+     * @param event The event which happens
      */
     @FXML
     public void menuActionNew(ActionEvent event) {
@@ -122,7 +103,7 @@ public class MantleController implements Initializable {
     /**
      * Shows the about window
      *
-     * @param event
+     * @param event Thee event which happens
      */
     @FXML
     public void menuActionAbout(ActionEvent event) {
@@ -301,19 +282,21 @@ public class MantleController implements Initializable {
      * If asset edited is null, then it breaks from the function
      */
     protected void updateAssetDisplayView() {
-        Asset asset = assetList.getSelectionModel().getSelectedItem();
-        String taglist = collection.getAssetTags(asset.getId());
-        if (asset == null) {
+        try {
+            Asset asset = assetList.getSelectionModel().getSelectedItem();
+            String taglist = collection.getAssetTags(asset.getId());
+            _assetName.setText(asset.getName());
+            _assetAuthor.setText(asset.getAuthor());
+            _assetCategory.setText(asset.getCategory().toString());
+            _assetPath.setText(asset.getPath());
+            _assetFilesize.setText(asset.getSize());
+            _assetTags.setText(taglist);
+            _assetType.setText(_editType.getText());
+            fileHelper.setImage(assetImage, asset.getPath());
+        } catch (Exception e) {
+            //This is to catch the NullPointerException
             return;
         }
-        _assetName.setText(asset.getName());
-        _assetAuthor.setText(asset.getAuthor());
-        _assetCategory.setText(asset.getCategory().toString());
-        _assetPath.setText(asset.getPath());
-        _assetFilesize.setText(asset.getSize());
-        _assetTags.setText(taglist);
-        _assetType.setText(_editType.getText());
-        fileHelper.setImage(assetImage, asset.getPath());
     }
 
     /**
@@ -376,10 +359,19 @@ public class MantleController implements Initializable {
     }
 
     /**
-     * Init function called from initialized for cleaness
-     * Listener is modified from SO
+     * Function called when the application starts
+     * It was used to hide the Mac menubar
+     * Now it just calls the init function.
+     *
+     * @param location  Location for
+     * @param resources The resourcebundle for the language
      */
-    protected void init() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        /*String macMenu = System.getProperty("apple.laf.useScreenMenuBar");
+        if (macMenu != null && macMenu.equals("true")) {
+            BProot.getChildren().remove(menubar);
+        }*/
         assetList.getItems().clear();
         assetList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> updateAssetDisplayView());
         editorFields = new TextField[]{_editName, _editAuthor, _editPath, _editType, _editTags};
@@ -387,6 +379,7 @@ public class MantleController implements Initializable {
         for (int i = 0; i < assetCategories.getCategoryArray().length; i++) {
             editCategoryCombo.getItems().add(assetCategories.getCategoryArray()[i].toString());
         }
+
     }
 
     /**

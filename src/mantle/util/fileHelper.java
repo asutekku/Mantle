@@ -70,8 +70,8 @@ public class fileHelper {
      * Set's image to the imgview
      * If path is not image or it is not proper, image will be null
      *
-     * @param imgview
-     * @param path
+     * @param imgview Imgview to set the image
+     * @param path Path for the image
      */
     public static void setImage(ImageView imgview, String path) {
         if (path != null && !path.isEmpty() && path != "Undefined") {

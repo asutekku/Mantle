@@ -16,7 +16,7 @@ import java.util.List;
 public class Assets  implements Iterable<Asset> {
     private static int count = 0;
     private String filename = "";
-    private final List<Asset> items = new ArrayList<Asset>();
+    private final List<Asset> assets = new ArrayList<Asset>();
 
     /**
      * Default constructor
@@ -31,7 +31,7 @@ public class Assets  implements Iterable<Asset> {
      * @throws HandleException Uh oh
      */
     public void addNew(Asset asset) throws HandleException {
-        items.add(asset);
+        assets.add(asset);
         count++;
     }
 
@@ -44,7 +44,7 @@ public class Assets  implements Iterable<Asset> {
      * @throws IndexOutOfBoundsException out of bounds
      */
     public Asset get(int i) throws IndexOutOfBoundsException {
-        return items.get(i);
+        return assets.get(i);
     }
 
     /**
@@ -57,7 +57,7 @@ public class Assets  implements Iterable<Asset> {
     public Asset getbyID(int ID) throws IndexOutOfBoundsException {
         Asset returnable = null;
         try {
-            for (Asset i : items) {
+            for (Asset i : assets) {
                 if (i.getId() ==ID){
                     returnable =  i;
                 }

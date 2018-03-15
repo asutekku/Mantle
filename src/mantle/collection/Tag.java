@@ -34,9 +34,9 @@ public class Tag {
      * @return The tag ID
      */
     public int register() {
-        tagID = nextValue;
-        nextValue++;
-        return tagID;
+        this.tagID = this.nextValue;
+        this.nextValue++;
+        return this.tagID;
     }
 
     /**

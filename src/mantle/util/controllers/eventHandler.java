@@ -20,6 +20,7 @@ import java.util.ResourceBundle;
  *
  * @Author Aku Mäkelä
  */
+@SuppressWarnings("unused")
 public class eventHandler {
 
     private static ResourceBundle bundle = PreferenceLoader.getLanguageBundle();
@@ -40,7 +41,7 @@ public class eventHandler {
     /**
      * @param grid Pane to toggle visibility
      */
-    public static void changeVisibility(ActionEvent event, Pane grid) {
+    public static void changeVisibility(Pane grid) {
         for (Node child : grid.getChildren()) {
             child.setVisible(!child.isVisible());
         }
@@ -61,7 +62,7 @@ public class eventHandler {
      * Saves data to file
      * Well obviously not yet
      *
-     * @param Message
+     * @param Message The message to show in a string form
      */
     public static void saveData(String Message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
