@@ -63,6 +63,10 @@ public class Asset implements Record{
         return size;
     }
 
+    public String getType() {
+        return type;
+    }
+
     /**
      * Returns either true or false depending if assiging a path works
      * Right now it only checks if the path is empty

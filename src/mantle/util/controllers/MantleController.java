@@ -307,7 +307,7 @@ public class MantleController implements Initializable {
             _assetPath.setText(asset.getPath());
             _assetFilesize.setText(asset.getSize());
             _assetTags.setText(taglist);
-            _assetType.setText(_editType.getText());
+            _assetType.setText(asset.getType());
             fileHelper.setImage(assetImage, asset.getPath());
         } catch (Exception e) {
             //This is to catch the NullPointerException
