@@ -1,9 +1,11 @@
 package mantle.collection;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import mantle.util.preferences.CategoryPreferences;
+
+import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Tags class
@@ -66,6 +68,26 @@ public class Tags {
      */
     public int getCount() {
         return count;
+    }
+
+    public void readFromFile(String path) throws HandleException {
+        String filepath = path.replace("file:", "");
+        Pattern valueMatcher = Pattern.compile("\\|");
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] pref = line.split("\\|+");
+                Tag tag = new Tag();
+                Matcher matcher = valueMatcher.matcher(line);
+                tag.setTagID(Integer.parseInt(pref[0]));
+                tag.setAssetID(Integer.parseInt(pref[1]));
+                tag.setTagName(pref[2]);
+                addNew(tag);
+            }
+        } catch (IOException e) {
+            System.out.println("Something went wrong");
+            e.printStackTrace();
+        }
     }
 
     /**

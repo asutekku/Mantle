@@ -1,6 +1,15 @@
 package mantle.collection;
 
 import mantle.util.controllers.eventHandler;
+import mantle.util.preferences.CategoryPreferences;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Collection-class
@@ -144,8 +153,20 @@ public class Collection {
      * @param fileName file to read from
      * @throws HandleException
      */
-    public void readFromFile(String fileName) throws HandleException {
-        assets.readFromFile(fileName);
+    public void readFromFile(String fileName) throws HandleException, IOException {
+        String filepath = fileName.replace("file:", "");
+        String assetLine = Files.readAllLines(Paths.get(filepath)).get(3);
+        String tagLine = Files.readAllLines(Paths.get(filepath)).get(4);
+        Pattern valueMatcher = Pattern.compile("\\|");
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            String asline =  assetLine.replace("Assets: ","");
+            String tline = tagLine.replace("Tags: ","");
+            assets.readFromFile(asline);
+            tags.readFromFile(tline);
+        } catch (IOException e) {
+            System.out.println("Something went wrong");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -155,7 +176,25 @@ public class Collection {
      * @throws HandleException
      */
     public void save() throws HandleException {
-        assets.save(collectionPath,collectionName);
-        tags.save(collectionPath,collectionName);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDate localDate = LocalDate.now();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(collectionPath + collectionName + ".mcl"))) {
+            StringBuilder line = new StringBuilder();
+            bufferedWriter.write("Mantle collection: " + collectionName);
+            bufferedWriter.newLine();
+            bufferedWriter.write("Created on: " + dtf.format(localDate));
+            bufferedWriter.newLine();
+            bufferedWriter.write("#################################");
+            bufferedWriter.newLine();
+            bufferedWriter.write("Assets: " + collectionPath + collectionName + "_assets.mna");
+            bufferedWriter.newLine();
+            bufferedWriter.write("Tags: " + collectionPath + collectionName + "_tags.mnt");
+            bufferedWriter.newLine();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assets.save(collectionPath, collectionName);
+        tags.save(collectionPath, collectionName);
     }
 }

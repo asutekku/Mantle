@@ -1,6 +1,7 @@
 package mantle.util.controllers;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -78,7 +79,7 @@ public class MantleController implements Initializable {
      * Not yet working, just shows the filechooser
      */
     @FXML
-    public void menuActionOpen() throws HandleException {
+    public void menuActionOpen() throws HandleException, IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Mantle (.mcl)", "*.mcl"),
