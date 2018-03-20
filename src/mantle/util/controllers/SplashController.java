@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.event.*;
+import mantle.util.Session;
 
 /**
  * Splashcontroller class
@@ -36,6 +37,7 @@ public class SplashController {
     @FXML
     public void splashCreateButtonAction(ActionEvent event) {
         String input = getName();
+        Session.setCollectionName(input);
         eventHandler.OpenNewWindow(event, "mantle", "Mantle - " + input, false);
     }
 

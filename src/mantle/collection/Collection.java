@@ -17,8 +17,12 @@ public class Collection {
     private final Assets assets = new Assets();
     private final Tags tags = new Tags();
 
-    public Collection() {
+    public String getCollectionName() {
+        return collectionName;
+    }
 
+    public void setCollectionName(String collectionName) {
+        this.collectionName = collectionName;
     }
 
     /**

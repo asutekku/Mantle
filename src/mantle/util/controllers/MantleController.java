@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.fxml.Initializable;
 
+import mantle.util.Session;
 import mantle.util.fileHelper;
 import mantle.util.preferences.PreferenceLoader;
 import mantle.util.validate.StringValidator;
@@ -41,8 +42,8 @@ public class MantleController implements Initializable {
     private ListView<Asset> assetList;
     public TextField[] editorFields;
     private Text[] assetFields;
-    private String CollectionName = "Sample";
-    private Collection ControllerCollection = new Collection();
+    private String CollectionName = Session.getCollectionName();
+    private Collection ControllerCollection = Session.getCollection();
     private Categories assetCategories = PreferenceLoader.getCategories();
     private boolean editingInProcess = false;
     private boolean additionInProcess = false;
@@ -424,14 +425,5 @@ public class MantleController implements Initializable {
         for (int i = 0; i < assetCategories.getCategoryArray().length; i++) {
             editCategoryCombo.getItems().add(assetCategories.getCategoryArray()[i].toString());
         }
-    }
-
-    /**
-     * Sets the collection used in the UI
-     *
-     * @param collection
-     */
-    public void setCollection(Collection collection) {
-        this.ControllerCollection = collection;
     }
 }
