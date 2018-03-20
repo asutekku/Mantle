@@ -9,7 +9,7 @@ package mantle.collection;
  *
  * @Author Aku Mäkelä
  */
-public class Tag {
+public class Tag implements Record{
     private int tagID;
     private int assetID;
     private String tagName;

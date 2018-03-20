@@ -59,8 +59,4 @@ public class ApplicationPreferences {
         load(filename);
         save(filename);
     }
-
-    public static void loadTypes() {
-
-    }
 }

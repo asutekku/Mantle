@@ -7,16 +7,16 @@ import mantle.collection.HandleException;
 public class CategoryPreferences {
 
     private static final Categories categories = new Categories(4);
-    private static Category basic = new Category("Basic");
-    private static Category material = new Category("Material");
-    private static Category staticMesh = new Category("Static Mesh");
-    private static Category texture = new Category("Texture");
+    private static Category basic = new Category("Basic","B");
+    private static Category material = new Category("Material","M");
+    private static Category staticMesh = new Category("Static Mesh","SM");
+    private static Category texture = new Category("Texture","T");
 
     public Category[] getCategoryArray() {
         return categories.getCategoryArray();
     }
 
-    public Categories getCategories() {
+    public static Categories getCategories() {
         return categories;
     }
 

@@ -16,6 +16,7 @@ public class Category {
     private int categoryID;
     private String catName;
     private int nextValue = 0;
+    private String catNameMin;
 
     public Category() {
 
@@ -42,8 +43,9 @@ public class Category {
      *
      * @param categoryName Name for the category
      */
-    public Category(String categoryName) {
+    public Category(String categoryName, String catNameMin) {
         this.catName = categoryName;
+        this.catNameMin = catNameMin;
     }
 
     /**
@@ -55,6 +57,9 @@ public class Category {
     public String toString(){
         return this.catName;
     }
+    public String toStringMin(){
+        return this.catNameMin;
+    }
 
     /**
      * @return Assigns a new id to the category
@@ -63,5 +68,13 @@ public class Category {
         categoryID = nextValue;
         nextValue++;
         return categoryID;
+    }
+
+    public String getCatNameMin() {
+        return catNameMin;
+    }
+
+    public void setCatNameMin(String catNameMin) {
+        this.catNameMin = catNameMin;
     }
 }

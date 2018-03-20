@@ -5,6 +5,8 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.text.Text;
@@ -19,6 +21,7 @@ import javafx.fxml.Initializable;
 
 import mantle.util.fileHelper;
 import mantle.util.preferences.PreferenceLoader;
+import mantle.util.validate.StringValidator;
 
 public class MantleController implements Initializable {
 
@@ -39,10 +42,11 @@ public class MantleController implements Initializable {
     public TextField[] editorFields;
     private Text[] assetFields;
     private String CollectionName = "Sample";
-    private Collection collection = new Collection();
+    private Collection ControllerCollection = new Collection();
     private Categories assetCategories = PreferenceLoader.getCategories();
     private boolean editingInProcess = false;
     private boolean additionInProcess = false;
+    boolean errors = false;
     private ResourceBundle messages = PreferenceLoader.getLanguageBundle();
 
     /**
@@ -73,13 +77,17 @@ public class MantleController implements Initializable {
      * Not yet working, just shows the filechooser
      */
     @FXML
-    public void menuActionOpen() {
+    public void menuActionOpen() throws HandleException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Mantle (.mnt)", "*.mnt"),
+                new FileChooser.ExtensionFilter("Mantle (.mcl)", "*.mcl"),
                 new FileChooser.ExtensionFilter($("filechooserAllFiles"), "*.*"));
         fileChooser.setTitle($("filechooserOpenCollection"));
-        fileChooser.showOpenDialog(menubar.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(menubar.getScene().getWindow());
+        String filepath = fileHelper.getPath(file);
+        ControllerCollection.readFromFile(filepath);
+        updateList();
+
     }
 
     /**
@@ -87,8 +95,8 @@ public class MantleController implements Initializable {
      * Not yet working
      */
     @FXML
-    public void menuActionSave() {
-        eventHandler.saveData("Uh oh");
+    public void menuActionSave() throws HandleException {
+        ControllerCollection.save();
     }
 
     /**
@@ -189,7 +197,7 @@ public class MantleController implements Initializable {
         toggleAssetDisplayViewEditorVisibility();
         toggleAssetDisplayViewEditorButtonVisibility();
         //Adds a new asset and selects it
-        search(collection.newAsset());
+        search(ControllerCollection.newAsset());
     }
 
     /**
@@ -208,7 +216,7 @@ public class MantleController implements Initializable {
         toggleAssetDisplayViewEditorButtonVisibility();
         updateAssetDisplayView();
         //Selects the saved asset
-        search(asset.getId());
+        search(asset.getIdNumber());
     }
 
     /**
@@ -269,12 +277,20 @@ public class MantleController implements Initializable {
     protected void search(int idNum) {
         assetList.getItems().clear();
         int index = 0;
-        for (int i = 0; i < collection.getAssetCount(); i++) {
-            Asset asset = collection.getAsset(i);
-            if (asset.getId() == idNum) index = i;
+        for (int i = 0; i < ControllerCollection.getAssetCount(); i++) {
+            Asset asset = ControllerCollection.getAsset(i);
+            if (asset.getIdNumber() == idNum) index = i;
             assetList.getItems().add(asset);
         }
         assetList.getSelectionModel().select(index);
+    }
+
+    protected void updateList() {
+        assetList.getItems().clear();
+        for (int i = 0; i < ControllerCollection.getAssetCount(); i++) {
+            Asset asset = ControllerCollection.getAsset(i);
+            assetList.getItems().add(asset);
+        }
     }
 
     /**
@@ -284,7 +300,7 @@ public class MantleController implements Initializable {
     protected void updateAssetDisplayView() {
         try {
             Asset asset = assetList.getSelectionModel().getSelectedItem();
-            String taglist = collection.getAssetTags(asset.getId());
+            String taglist = ControllerCollection.getAssetTags(asset.getIdNumber());
             _assetName.setText(asset.getName());
             _assetAuthor.setText(asset.getAuthor());
             _assetCategory.setText(asset.getCategory().toString());
@@ -300,6 +316,28 @@ public class MantleController implements Initializable {
     }
 
     /**
+     * Adds focus listener to a textfield
+     *
+     * @param validatable Textfield the listener will be added
+     */
+    public void addListeners(TextField validatable) {
+        String errorStyle = "-fx-border-color: red; -fx-border-width: 2px;";
+        validatable.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (oldValue) try {
+                    StringValidator.validateString(validatable.getText());
+                    validatable.setStyle("");
+                    errors = false;
+                } catch (HandleException e) {
+                    validatable.setStyle(errorStyle);
+                    errors = true;
+                }
+            }
+        });
+    }
+
+    /**
      * Updates the asset being edited
      * Used both when creating asset and modifying asset
      * <p>
@@ -312,14 +350,18 @@ public class MantleController implements Initializable {
      * @throws HandleException
      */
     protected void updateAsset(Asset asset) throws HandleException {
-        //String errorStyle = "-fx-border-color: red ; -fx-border-width: 2px ;";
-        asset.setCategory(assetCategories, editCategoryCombo);
-        asset.setFilename(_editName.getText());
-        asset.setFilepath(_editPath.getText());
-        asset.setAuthor(_editAuthor.getText());
-        asset.setType(_editType.getText());
-        asset.setSize(_assetFilesize.getText());
-        collection.addTag(asset, _editTags.getText());
+        if (!errors) {
+            String errorStyle = "-fx-border-color: red; -fx-border-width: 2px;";
+            asset.setCategory(assetCategories, editCategoryCombo.getValue());
+            _editName.setStyle(!asset.setFilename(_editName.getText()) ? errorStyle : "");
+            _editPath.setStyle(!asset.setFilepath(_editPath.getText()) ? errorStyle : "");
+            _editAuthor.setStyle(!asset.setAuthor(_editAuthor.getText()) ? errorStyle : "");
+            _editType.setStyle(!asset.setType(_editType.getText()) ? errorStyle : "");
+            _assetFilesize.setStyle(!asset.setSize(_assetFilesize.getText()) ? errorStyle : "");
+            ControllerCollection.addTag(asset, _editTags.getText());
+        } else {
+            eventHandler.error("Please correct the fields marked with red.");
+        }
     }
 
     /**
@@ -375,11 +417,13 @@ public class MantleController implements Initializable {
         assetList.getItems().clear();
         assetList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> updateAssetDisplayView());
         editorFields = new TextField[]{_editName, _editAuthor, _editPath, _editType, _editTags};
+        for (TextField field : editorFields) {
+            addListeners(field);
+        }
         assetFields = new Text[]{_assetName, _assetAuthor, _assetPath, _assetCategory, _assetType, _assetTags};
         for (int i = 0; i < assetCategories.getCategoryArray().length; i++) {
             editCategoryCombo.getItems().add(assetCategories.getCategoryArray()[i].toString());
         }
-
     }
 
     /**
@@ -388,6 +432,6 @@ public class MantleController implements Initializable {
      * @param collection
      */
     public void setCollection(Collection collection) {
-        this.collection = collection;
+        this.ControllerCollection = collection;
     }
 }

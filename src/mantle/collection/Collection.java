@@ -4,7 +4,7 @@ import mantle.util.controllers.eventHandler;
 
 /**
  * Collection-class
- *
+ * <p>
  * Used to store the assets and tags used in the collection
  * For now, there's no way to save the collection
  *
@@ -12,9 +12,14 @@ import mantle.util.controllers.eventHandler;
  * @version 0.1, 28.02.2018
  */
 public class Collection {
-    private String collectionName = "";
+    private String collectionName = "Sample";
+    private String collectionPath = "/Users/akko/Documents/JYU/ohj2/";
     private final Assets assets = new Assets();
     private final Tags tags = new Tags();
+
+    public Collection() {
+
+    }
 
     /**
      * Returns the count of assets in collection
@@ -75,7 +80,7 @@ public class Collection {
      */
     public void addTag(Asset asset, String tagName) throws HandleException {
         Tag tag = new Tag(tagName);
-        tag.setAssetID(asset.getId());
+        tag.setAssetID(asset.getIdNumber());
         //asset.setTag(tag.getTagID());
         tags.addNew(tag);
     }
@@ -92,7 +97,7 @@ public class Collection {
     public String getAssetTags(int assetId) throws IndexOutOfBoundsException {
         StringBuilder output = new StringBuilder();
         output.append("");
-        for (int i = 0; i < tags.getCount(); i++){
+        for (int i = 0; i < tags.getCount(); i++) {
             if (tags.getTags()[i].getAssetID() == assetId) {
                 String tagName = tags.getTags()[i].getTagName();
                 output.append(tagName + " ");
@@ -121,7 +126,7 @@ public class Collection {
         Asset newAsset = new Asset();
         try {
             this.add(newAsset);
-            return newAsset.getId();
+            return newAsset.getIdNumber();
         } catch (HandleException e) {
             eventHandler.error("Problems with creating a new asset " + e.getMessage());
             return -1;
@@ -146,6 +151,7 @@ public class Collection {
      * @throws HandleException
      */
     public void save() throws HandleException {
-        assets.save();
+        assets.save(collectionPath,collectionName);
+        tags.save(collectionPath,collectionName);
     }
 }

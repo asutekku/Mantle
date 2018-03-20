@@ -1,6 +1,5 @@
 package mantle.collection;
 
-import javafx.scene.control.ComboBox;
 import mantle.util.preferences.PreferenceLoader;
 
 import java.io.*;
@@ -18,7 +17,7 @@ import java.io.*;
  * @author Aku Mäkelä
  * @version 0.2, 13.03.2018
  */
-public class Asset {
+public class Asset implements Record{
     private int idNumber;
     private String filepath;
     private String fileName;
@@ -122,11 +121,10 @@ public class Asset {
      * If category is not defined, category is Basic
      *
      * @param categories Categoryset to choose the category from
-     * @param combo      Combobox to take the category from
      */
-    public void setCategory(Categories categories, ComboBox<String> combo) {
+    public void setCategory(Categories categories, String value) {
         for (int i = 0; i < categories.getCategoryArray().length; i++) {
-            if (categories.getCategoryArray()[i].toString() == combo.getValue()) {
+            if (categories.getCategoryArray()[i].toString() == value) {
                 setCategory(categories.getCategoryArray()[i]);
                 break;
             }
@@ -229,8 +227,13 @@ public class Asset {
      *
      * @return Asset id
      */
-    public int getId() {
+    public int getIdNumber() {
         return idNumber;
+    }
+
+    public void setIdNumber(int ID) {
+        this.idNumber = ID;
+        nextValue = ID + 1;
     }
 
     /**

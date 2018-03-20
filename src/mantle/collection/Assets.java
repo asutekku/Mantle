@@ -1,19 +1,23 @@
 package mantle.collection;
 
+import mantle.util.preferences.CategoryPreferences;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Assets class
- *
+ * <p>
  * All of the collections assets will be stored to the asset list
  * User will be not able to create a new Assets class
  *
  * @Author Aku Mäkelä
- *
  */
-public class Assets  implements Iterable<Asset> {
+public class Assets implements Iterable<Asset> {
     private static int count = 0;
     private String filename = "";
     private final List<Asset> assets = new ArrayList<Asset>();
@@ -58,8 +62,8 @@ public class Assets  implements Iterable<Asset> {
         Asset returnable = null;
         try {
             for (Asset i : assets) {
-                if (i.getId() ==ID){
-                    returnable =  i;
+                if (i.getIdNumber() == ID) {
+                    returnable = i;
                 }
             }
         } catch (IndexOutOfBoundsException e) {
@@ -76,8 +80,26 @@ public class Assets  implements Iterable<Asset> {
      * @throws HandleException
      */
     public void readFromFile(String path) throws HandleException {
-        filename = path + "/assets.mcl";
-        throw new HandleException("Can't read from file: " + filename);
+        String filepath = path.replace("file:", "");
+        Pattern valueMatcher = Pattern.compile("\\|");
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] pref = line.split("\\|+");
+                Asset asset = new Asset();
+                Matcher matcher = valueMatcher.matcher(line);
+                asset.setIdNumber(Integer.parseInt(pref[0]));
+                asset.setFilepath(pref[1]);
+                asset.setFilename(pref[2]);
+                asset.setCategory(CategoryPreferences.getCategories(), pref[3]);
+                asset.setType(pref[4]);
+                assets.add(asset);
+                count++;
+            }
+        } catch (IOException e) {
+            System.out.println("Something went wrong");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -85,8 +107,19 @@ public class Assets  implements Iterable<Asset> {
      *
      * @throws HandleException
      */
-    public void save() throws HandleException {
-        throw new HandleException("Can't save to file: " + filename);
+    public void save(String path, String name) throws HandleException {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path + name + "_assets.mna"))) {
+            for (Asset asset : assets) {
+                StringBuilder line = new StringBuilder();
+                line.append(asset.getIdNumber()).append("|").append(asset.getPath()).append("|");
+                line.append(asset.getName()).append("|").append(asset.getCategory().toStringMin()).append("|");
+                line.append(asset.getAuthor());
+                bufferedWriter.write(line.toString());
+                bufferedWriter.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
