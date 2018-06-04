@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
  * @Author Aku Mäkelä
  */
 public class Assets implements Iterable<Asset> {
-    private static int count = 0;
     private String filename = "";
     private final List<Asset> assets = new ArrayList<Asset>();
 
@@ -36,7 +35,6 @@ public class Assets implements Iterable<Asset> {
      */
     public void addNew(Asset asset) throws HandleException {
         assets.add(asset);
-        count++;
     }
 
 
@@ -76,25 +74,24 @@ public class Assets implements Iterable<Asset> {
      * Reads the asset database from a file
      * MCL = Mantle CoLlection
      *
-     * @param path
-     * @throws HandleException
+     * @param path Path to read from
+     * @throws HandleException exception handler
      */
     public void readFromFile(String path) throws HandleException {
         String filepath = path.replace("file:", "");
-        Pattern valueMatcher = Pattern.compile("\\|");
+        //Pattern valueMatcher = Pattern.compile("\\|");
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] pref = line.split("\\|+");
                 Asset asset = new Asset();
-                Matcher matcher = valueMatcher.matcher(line);
+                //Matcher matcher = valueMatcher.matcher(line);
                 asset.setIdNumber(Integer.parseInt(pref[0]));
                 asset.setFilepath(pref[1]);
                 asset.setFilename(pref[2]);
                 asset.setCategory(CategoryPreferences.getCategories(), pref[3]);
                 asset.setType(pref[4]);
                 assets.add(asset);
-                count++;
             }
         } catch (IOException e) {
             System.out.println("Something went wrong");
@@ -105,7 +102,9 @@ public class Assets implements Iterable<Asset> {
     /**
      * Saves the asset database to file
      *
-     * @throws HandleException
+     * @param path Path to save to
+     * @param name Name of the file to save
+     * @throws HandleException Exception handler
      */
     public void save(String path, String name) throws HandleException {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path + name + "_assets.mna"))) {
@@ -127,7 +126,7 @@ public class Assets implements Iterable<Asset> {
      * @return The count of assets
      */
     public int getCount() {
-        return count;
+        return assets.size();
     }
 
     @Override

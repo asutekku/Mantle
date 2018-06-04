@@ -4,6 +4,11 @@ import mantle.collection.Categories;
 import mantle.collection.Category;
 import mantle.collection.HandleException;
 
+/**
+ * @author akko
+ * @version 5 Apr 2018
+ *
+ */
 public class CategoryPreferences {
 
     private static final Categories categories = new Categories(4);
@@ -12,14 +17,23 @@ public class CategoryPreferences {
     private static Category staticMesh = new Category("Static Mesh","SM");
     private static Category texture = new Category("Texture","T");
 
-    public Category[] getCategoryArray() {
+    /**
+     * @return Categoryarray
+     */
+    public static Category[] getCategoryArray() {
         return categories.getCategoryArray();
     }
 
+    /**
+     * @return Categories
+     */
     public static Categories getCategories() {
         return categories;
     }
 
+    /**
+     * Add's categories to the preferences
+     */
     public static void addCategories() {
         try {
             categories.addNew(basic);
@@ -29,10 +43,5 @@ public class CategoryPreferences {
         } catch (HandleException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        addCategories();
-        System.out.println(categories.getCategoryArray().toString());
     }
 }

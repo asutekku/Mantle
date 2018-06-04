@@ -16,7 +16,7 @@ public class Categories {
     /**
      * Creates a new category array with n elements
      *
-     * @param size
+     * @param size Arrays size
      */
     public Categories(int size) {
         categories = new Category[size];
@@ -25,8 +25,8 @@ public class Categories {
     /**
      * Adds a new Category to the category array
      *
-     * @param category
-     * @throws HandleException
+     * @param category category to add
+     * @throws HandleException Exceptionhandler
      */
     public void addNew(Category category) throws HandleException {
         if (count >= categories.length) throw new HandleException("Too much assets");
@@ -37,7 +37,7 @@ public class Categories {
     /**
      * Returns the categoryarray
      *
-     * @return
+     * @return categories
      */
     public Category[] getCategoryArray(){
         return categories;

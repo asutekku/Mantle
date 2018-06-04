@@ -12,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import mantle.collection.*;
 
 import javafx.event.ActionEvent;
 import javafx.application.Platform;
@@ -20,11 +19,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.fxml.Initializable;
 
+import mantle.MantleMain;
 import mantle.util.Session;
 import mantle.util.fileHelper;
 import mantle.util.preferences.PreferenceLoader;
 import mantle.util.validate.StringValidator;
+import mantle.collection.*;
 
+/**
+ * @author akko
+ * @version 5 Apr 2018
+ */
 public class MantleController implements Initializable {
 
     @FXML
@@ -41,12 +46,14 @@ public class MantleController implements Initializable {
     private ComboBox<String> editCategoryCombo;
     @FXML
     private ListView<Asset> assetList;
-    public TextField[] editorFields;
+    private TextField[] editorFields;
     private Text[] assetFields;
-    private String CollectionName = Session.getCollectionName();
+    //private String CollectionName = Session.getCollectionName();
     private Collection ControllerCollection = Session.getCollection();
     private Categories assetCategories = PreferenceLoader.getCategories();
+    @SuppressWarnings("unused") // This is used in functions
     private boolean editingInProcess = false;
+    @SuppressWarnings("unused") // This is used in functions
     private boolean additionInProcess = false;
     boolean errors = false;
     private ResourceBundle messages = PreferenceLoader.getLanguageBundle();
@@ -77,28 +84,49 @@ public class MantleController implements Initializable {
     /**
      * Opens a collection to the view
      * Not yet working, just shows the filechooser
+     *
+     * @throws HandleException      Exception D:
+     * @throws IOException          Exception :D
+     * @throws NullPointerException Exception :D
      */
     @FXML
-    public void menuActionOpen() throws HandleException, IOException {
+    public void menuActionOpen() throws HandleException, IOException, NullPointerException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Mantle (.mcl)", "*.mcl"),
                 new FileChooser.ExtensionFilter($("filechooserAllFiles"), "*.*"));
         fileChooser.setTitle($("filechooserOpenCollection"));
         File file = fileChooser.showOpenDialog(menubar.getScene().getWindow());
-        String filepath = fileHelper.getPath(file);
-        ControllerCollection.readFromFile(filepath);
-        updateList();
-
+        if (file != null) {
+            assetList.getItems().clear();
+            String filepath = fileHelper.getPath(file);
+            ControllerCollection.readFromFile(filepath);
+            MantleMain.setStageTitle("");
+            updateList();
+        }
     }
 
     /**
      * Saves the collection with old name
      * Not yet working
+     *
+     * @throws HandleException Expectionhandler
      */
     @FXML
     public void menuActionSave() throws HandleException {
-        ControllerCollection.save();
+        if (ControllerCollection.getCollectionPath() != null) {
+            ControllerCollection.save();
+        } else {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Mantle (.mcl)", "*.mcl"));
+            fileChooser.setTitle($("filechooserSaveCollection"));
+            File file = fileChooser.showSaveDialog(menubar.getScene().getWindow());
+            if (file != null) {
+                ControllerCollection.setCollectionPath(file.getAbsolutePath());
+                ControllerCollection.save();
+            }
+        }
     }
 
     /**
@@ -107,7 +135,19 @@ public class MantleController implements Initializable {
      */
     @FXML
     public void menuActionSaveAs() {
-        eventHandler.error($("errorNotInUse"));
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Mantle (.mcl)", "*.mcl"));
+        fileChooser.setTitle($("filechooserSaveCollection"));
+        File file = fileChooser.showSaveDialog(menubar.getScene().getWindow());
+        if (file != null) {
+            ControllerCollection.setCollectionPath(file.getAbsolutePath());
+            try {
+                ControllerCollection.save();
+            } catch (HandleException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -122,11 +162,10 @@ public class MantleController implements Initializable {
 
     /**
      * Closes the collection
-     * Not yet working
      */
     @FXML
     public void menuActionClose() {
-        eventHandler.error($("errorNotInUse"));
+        assetList.getItems().clear();
     }
 
     /**
@@ -143,24 +182,24 @@ public class MantleController implements Initializable {
      * <p>
      * Uses regex to check if the input matches a number
      *
-     * @param ae
+     * @param ae Actionevent
      */
     @FXML
-    public void searchActionEvent(ActionEvent ae) {
+    public void searchActionEvent(@SuppressWarnings("unused") ActionEvent ae) {
         String searchInput = searchBox.getText();
         int idNum = 0;
         if (searchInput.isEmpty()) {
             eventHandler.error($("errorInputSomething"));
         } else if (searchInput.matches("\\d+")) {
-            idNum = Integer.parseInt(searchInput);
-            search(idNum);
+            search(searchInput);
         } else {
-            Object[] errorMsgArg = {searchInput};
+            search(searchInput);
+            /*Object[] errorMsgArg = {searchInput};
             MessageFormat formatter = new MessageFormat("");
             formatter.setLocale(PreferenceLoader.getLanguageBundle().getLocale());
             formatter.applyPattern(messages.getString("errorSearchInput"));
             String output = formatter.format(errorMsgArg);
-            eventHandler.error(output);
+            eventHandler.error(output);*/
         }
     }
 
@@ -170,10 +209,10 @@ public class MantleController implements Initializable {
      * Creates a new asset and makes it editable
      * If asset is image, then shows the image in right pane
      *
-     * @param actionEvent
+     * @param actionEvent Actionevent may be used in the future
      */
     @FXML
-    public void editorImportAction(ActionEvent actionEvent) {
+    public void editorImportAction(@SuppressWarnings("unused") ActionEvent actionEvent) {
         File file = fileHelper.importFile(menubar);
         String filepath;
         String fileSize;
@@ -189,17 +228,17 @@ public class MantleController implements Initializable {
     /**
      * The action for pressing NEW-button
      *
-     * @param event
+     * @param event May be used in the future
      */
     @FXML
-    private void newButtonAction(ActionEvent event) {
+    private void newButtonAction(@SuppressWarnings("unused") ActionEvent event) {
         editingInProcess = false;
         additionInProcess = true;
         clearAssetDisplayViewEditor();
         toggleAssetDisplayViewEditorVisibility();
         toggleAssetDisplayViewEditorButtonVisibility();
         //Adds a new asset and selects it
-        search(ControllerCollection.newAsset());
+        search(String.valueOf(ControllerCollection.newAsset()));
     }
 
     /**
@@ -207,27 +246,27 @@ public class MantleController implements Initializable {
      * The same function is called when you
      * save a new asset or edit and save old one
      *
-     * @param event
-     * @throws HandleException
+     * @param event May be used in the future
+     * @throws HandleException Exception :D
      */
     @FXML
-    private void saveButtonAction(ActionEvent event) throws HandleException {
+    private void saveButtonAction(@SuppressWarnings("unused") ActionEvent event) throws HandleException {
         Asset asset = assetList.getSelectionModel().getSelectedItem();
         updateAsset(asset);
         toggleAssetDisplayViewEditorVisibility();
         toggleAssetDisplayViewEditorButtonVisibility();
         updateAssetDisplayView();
         //Selects the saved asset
-        search(asset.getIdNumber());
+        search(String.valueOf(asset.getIdNumber()));
     }
 
     /**
      * Functionality when the EDIT-button is pressed
      *
-     * @param event
+     * @param event Event to use
      */
     @FXML
-    private void editButtonAction(ActionEvent event) {
+    private void editButtonAction(@SuppressWarnings("unused") ActionEvent event) {
         toggleAssetDisplayViewEditorVisibility();
         toggleAssetDisplayViewEditorButtonVisibility();
         editingInProcess = true;
@@ -238,20 +277,21 @@ public class MantleController implements Initializable {
      * Right now, well it does nothing
      * Should cancel the editing process for the asset
      *
-     * @param actionEvent
+     * @param actionEvent Event :D
      */
     @FXML
-    public void cancelButtonAction(ActionEvent actionEvent) {
+    public void cancelButtonAction(@SuppressWarnings("unused") ActionEvent actionEvent) {
+        //
     }
 
     /**
      * In the future, will be used to style the app
      * to show something is being dragged to it
      *
-     * @param event
+     * @param event Eventhandler :D
      */
     @FXML
-    private void mantleBaseDragDetected(DragEvent event) {
+    private void mantleBaseDragDetected(@SuppressWarnings("unused") DragEvent event) {
         System.out.print("Test");
     }
 
@@ -267,26 +307,46 @@ public class MantleController implements Initializable {
         System.out.print(DnD.mouseDragDropped(event));
     }
 
+    /**
+     * @param dragEvent Dragging event
+     */
     @FXML
-    public void mantleBaseDragEntered(DragEvent dragEvent) {
+    public void mantleBaseDragEntered(@SuppressWarnings("unused") DragEvent dragEvent) {
+        //
     }
 
     /**
-     * Selects the asset by ID
+     * Selects the asset by ID or asset's name
      *
-     * @param idNum Asset ID
+     * @param input Search input
      */
-    protected void search(int idNum) {
-        assetList.getItems().clear();
-        int index = 0;
-        for (int i = 0; i < ControllerCollection.getAssetCount(); i++) {
-            Asset asset = ControllerCollection.getAsset(i);
-            if (asset.getIdNumber() == idNum) index = i;
-            assetList.getItems().add(asset);
+    protected void search(String input) {
+        if (input.matches("\\d+")) {
+            int idNum = Integer.parseInt(input);
+            assetList.getItems().clear();
+            int index = 0;
+            for (int i = 0; i < ControllerCollection.getAssetCount(); i++) {
+                Asset asset = ControllerCollection.getAsset(i);
+                if (asset.getIdNumber() == idNum) index = idNum;
+                assetList.getItems().add(asset);
+            }
+            assetList.getSelectionModel().select(index);
+        } else {
+            assetList.getItems().clear();
+            int index = 0;
+            for (int i = 0; i < ControllerCollection.getAssetCount(); i++) {
+                Asset asset = ControllerCollection.getAsset(i);
+                if (asset.getName().equals(input) || asset.getName().startsWith(input)) index = asset.getIdNumber();
+                assetList.getItems().add(asset);
+            }
+            assetList.getSelectionModel().select(index);
         }
-        assetList.getSelectionModel().select(index);
     }
 
+
+    /**
+     * Updates the list in the view
+     */
     protected void updateList() {
         assetList.getItems().clear();
         for (int i = 0; i < ControllerCollection.getAssetCount(); i++) {
@@ -349,7 +409,7 @@ public class MantleController implements Initializable {
      * When editing, modifies existing asset
      *
      * @param asset Asset to be modified
-     * @throws HandleException
+     * @throws HandleException Exception handler :D
      */
     protected void updateAsset(Asset asset) throws HandleException {
         if (!errors) {
@@ -412,10 +472,6 @@ public class MantleController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        /*String macMenu = System.getProperty("apple.laf.useScreenMenuBar");
-        if (macMenu != null && macMenu.equals("true")) {
-            BProot.getChildren().remove(menubar);
-        }*/
         assetList.getItems().clear();
         assetList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> updateAssetDisplayView());
         editorFields = new TextField[]{_editName, _editAuthor, _editPath, _editType, _editTags};

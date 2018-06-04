@@ -17,10 +17,13 @@ import java.util.ResourceBundle;
  */
 public class MantleMain extends Application {
 
+    private static Stage stage;
+
     @Override
     public void start(Stage primaryStage) {
         try {
-            System.setProperty("apple.laf.useScreenMenuBar", "true");
+            stage = primaryStage;
+            //System.setProperty("apple.laf.useScreenMenuBar", "true");
             Localization local = new Localization("en", "US");
             ResourceBundle bundle = local.getLocale();
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("resources/scenes/splash.fxml"), bundle);
@@ -35,7 +38,18 @@ public class MantleMain extends Application {
         }
     }
 
+    /** Main function
+     * @param args not used
+     */
     public static void main(String[] args) {
         launch(args);
     }
+
+    /**
+     * @param newTitle New title for the stage
+     */
+    public static void setStageTitle(String newTitle) {
+        stage.setTitle(newTitle);
+    }
+
 }

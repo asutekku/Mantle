@@ -1,19 +1,17 @@
 package mantle.collection;
 
-import mantle.util.preferences.CategoryPreferences;
+//import mantle.util.preferences.CategoryPreferences;
 
 import java.io.*;
-import java.util.*;
+//import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Tags class
- *
+ * <p>
  * Collection has one tags class
  * There are no limits how many tags the collection can has
- *
- *
  */
 public class Tags {
     private int count = 0;
@@ -70,15 +68,18 @@ public class Tags {
         return count;
     }
 
-    public void readFromFile(String path) throws HandleException {
+    /**
+     * @param path Path to read from
+     */
+    public void readFromFile(String path) {
         String filepath = path.replace("file:", "");
-        Pattern valueMatcher = Pattern.compile("\\|");
+        //Pattern valueMatcher = Pattern.compile("\\|");
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] pref = line.split("\\|+");
                 Tag tag = new Tag();
-                Matcher matcher = valueMatcher.matcher(line);
+                //Matcher matcher = valueMatcher.matcher(line);
                 tag.setTagID(Integer.parseInt(pref[0]));
                 tag.setAssetID(Integer.parseInt(pref[1]));
                 tag.setTagName(pref[2]);
@@ -93,15 +94,22 @@ public class Tags {
     /**
      * Saves the asset database to file
      *
-     * @throws HandleException
+     * @param path Path to save
+     * @param name Name to save
      */
-    public void save(String path, String name) throws HandleException {
+    public void save(String path, String name) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path + name + "_tags.mnt"))) {
             for (Tag tag : tags) {
                 StringBuilder line = new StringBuilder();
-                line.append(tag.getTagID()).append("|").append(tag.getAssetID()).append("|").append(tag.getTagName());
-                bufferedWriter.write(line.toString());
-                bufferedWriter.newLine();
+                try {
+                    if (!tag.getTagName().equals("null")) {
+                        line.append(tag.getTagID()).append("|").append(tag.getAssetID()).append("|").append(tag.getTagName());
+                        bufferedWriter.write(line.toString());
+                        bufferedWriter.newLine();
+                    }
+                } catch (NullPointerException e ){
+                    //
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

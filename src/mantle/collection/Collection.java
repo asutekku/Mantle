@@ -1,15 +1,13 @@
 package mantle.collection;
 
 import mantle.util.controllers.eventHandler;
-import mantle.util.preferences.CategoryPreferences;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+//import java.util.regex.Pattern;
 
 /**
  * Collection-class
@@ -22,14 +20,39 @@ import java.util.regex.Pattern;
  */
 public class Collection {
     private String collectionName = "Sample";
-    private String collectionPath = "/Users/akko/Documents/JYU/ohj2/";
+    //private String collectionPath = "/Users/akko/Documents/JYU/ohj2/";
+    private String collectionPath = null;
     private final Assets assets = new Assets();
     private final Tags tags = new Tags();
 
+    /**
+     * Returns collections path
+     * @return Collections's path
+     */
+    public String getCollectionPath() {
+        return collectionPath;
+    }
+
+    /**
+     * Sets the collection's path
+     * @param collectionPath Collection's path
+     */
+    public void setCollectionPath(String collectionPath) {
+        this.collectionPath = collectionPath;
+    }
+
+    /**
+     * Returns collection's name
+     * @return Collection's name
+     */
     public String getCollectionName() {
         return collectionName;
     }
 
+    /**
+     * Set's collection's name
+     * @param collectionName Collection's name
+     */
     public void setCollectionName(String collectionName) {
         this.collectionName = collectionName;
     }
@@ -48,7 +71,7 @@ public class Collection {
      * Returns the amount of tags in the collection
      * This does not return unique tags, just the count
      *
-     * @return
+     * @return amount of tags
      */
     public int getTagCount() {
         return tags.getCount();
@@ -89,7 +112,7 @@ public class Collection {
      *
      * @param asset   Asset the tag will be assigned to
      * @param tagName The name of the tag that will be assigned
-     * @throws HandleException
+     * @throws HandleException Exception handler
      */
     public void addTag(Asset asset, String tagName) throws HandleException {
         Tag tag = new Tag(tagName);
@@ -105,7 +128,7 @@ public class Collection {
      *
      * @param assetId asset which you want the tags from
      * @return String containing the tags
-     * @throws IndexOutOfBoundsException
+     * @throws IndexOutOfBoundsException Exception
      */
     public String getAssetTags(int assetId) throws IndexOutOfBoundsException {
         StringBuilder output = new StringBuilder();
@@ -124,7 +147,7 @@ public class Collection {
      *
      * @param i asset id
      * @return nth asset
-     * @throws IndexOutOfBoundsException
+     * @throws IndexOutOfBoundsException Exceptin
      */
     public Asset getAsset(int i) throws IndexOutOfBoundsException {
         return assets.get(i);
@@ -151,16 +174,17 @@ public class Collection {
      * Not yet implemented
      *
      * @param fileName file to read from
-     * @throws HandleException
+     * @throws HandleException Exception :D
+     * @throws IOException Exception :D
      */
     public void readFromFile(String fileName) throws HandleException, IOException {
         String filepath = fileName.replace("file:", "");
         String assetLine = Files.readAllLines(Paths.get(filepath)).get(3);
         String tagLine = Files.readAllLines(Paths.get(filepath)).get(4);
-        Pattern valueMatcher = Pattern.compile("\\|");
+        //Pattern valueMatcher = Pattern.compile("\\|");
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
-            String asline =  assetLine.replace("Assets: ","");
-            String tline = tagLine.replace("Tags: ","");
+            String asline = assetLine.replace("Assets: ", "");
+            String tline = tagLine.replace("Tags: ", "");
             assets.readFromFile(asline);
             tags.readFromFile(tline);
         } catch (IOException e) {
@@ -173,13 +197,12 @@ public class Collection {
      * Saves the collection to file
      * Not yet implemented
      *
-     * @throws HandleException
+     * @throws HandleException EXcePtIoN :D
      */
     public void save() throws HandleException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate localDate = LocalDate.now();
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(collectionPath + collectionName + ".mcl"))) {
-            StringBuilder line = new StringBuilder();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(collectionPath))) {
             bufferedWriter.write("Mantle collection: " + collectionName);
             bufferedWriter.newLine();
             bufferedWriter.write("Created on: " + dtf.format(localDate));
@@ -189,7 +212,6 @@ public class Collection {
             bufferedWriter.write("Assets: " + collectionPath + collectionName + "_assets.mna");
             bufferedWriter.newLine();
             bufferedWriter.write("Tags: " + collectionPath + collectionName + "_tags.mnt");
-            bufferedWriter.newLine();
 
         } catch (IOException e) {
             e.printStackTrace();

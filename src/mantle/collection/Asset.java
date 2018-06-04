@@ -20,7 +20,6 @@ import java.io.*;
 public class Asset implements Record{
     private int idNumber;
     private String filepath;
-    private String fileName;
     private String name;
     private String author;
     private Category category;
@@ -29,7 +28,7 @@ public class Asset implements Record{
     private static int nextValue = 0;
 
     /**
-     * @return Returns the name of the assset
+     * @return Returns the name of the asset
      */
     public String getName() {
         return name;
@@ -63,6 +62,9 @@ public class Asset implements Record{
         return size;
     }
 
+    /**
+    * @return Returns the asset's type
+    */
     public String getType() {
         return type;
     }
@@ -125,6 +127,7 @@ public class Asset implements Record{
      * If category is not defined, category is Basic
      *
      * @param categories Categoryset to choose the category from
+     * @param value Sets the category based on the string
      */
     public void setCategory(Categories categories, String value) {
         for (int i = 0; i < categories.getCategoryArray().length; i++) {
@@ -188,9 +191,8 @@ public class Asset implements Record{
      * @param category CategoryPreferences of the asset
      * @param size     Size of the asset
      * @param author   Asset author
-     * @throws HandleException Exception if the creation fails
      */
-    public Asset(String name, String filepath, String author, Category category, String size) throws HandleException {
+    public Asset(String name, String filepath, String author, Category category, String size) {
         this.name = name;
         this.filepath = filepath;
         this.author = author;
@@ -234,7 +236,12 @@ public class Asset implements Record{
     public int getIdNumber() {
         return idNumber;
     }
-
+    
+    /**
+     * Set asset's ID
+     *
+     * @param ID the ID of the asset to modify
+     */
     public void setIdNumber(int ID) {
         this.idNumber = ID;
         nextValue = ID + 1;

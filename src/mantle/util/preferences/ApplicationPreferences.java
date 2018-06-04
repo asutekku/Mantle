@@ -6,6 +6,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author akko
+ * @version 5 Apr 2018
+ *
+ */
 public class ApplicationPreferences {
 
     /**
@@ -20,10 +25,16 @@ public class ApplicationPreferences {
     private static Pattern _keyValue = Pattern.compile("\\s*([^=]*)=(.*)");
     private static Map<String, String> _entries = new HashMap<>();
 
-    public ApplicationPreferences(String path) throws IOException {
+    /**
+     * @param path Path to load application preferences
+     */
+    public ApplicationPreferences(String path) {
         load(path);
     }
 
+    /**
+     * @param path Path to load from
+     */
     public static void load(String path) {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String line;
@@ -41,9 +52,11 @@ public class ApplicationPreferences {
         }
     }
 
+    /**
+     * @param path Path to save to
+     */
     public static void save(String path) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path))) {
-            String line;
             for (Map.Entry<String, String> entry : _entries.entrySet()){
                 String key = entry.getKey();
                 String value = entry.getValue();
@@ -55,6 +68,11 @@ public class ApplicationPreferences {
         }
     }
 
+    /**
+     * Testing function
+     * 
+     * @param args none
+     */
     public static void main(String[] args){
         load(filename);
         save(filename);

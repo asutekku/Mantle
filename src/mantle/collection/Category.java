@@ -18,8 +18,11 @@ public class Category {
     private int nextValue = 0;
     private String catNameMin;
 
+    /**
+     * It's a category
+     */
     public Category() {
-
+        //
     }
 
     /**
@@ -42,6 +45,7 @@ public class Category {
      * Constructor for the Category class
      *
      * @param categoryName Name for the category
+     * @param catNameMin Minified category's name
      */
     public Category(String categoryName, String catNameMin) {
         this.catName = categoryName;
@@ -57,6 +61,11 @@ public class Category {
     public String toString(){
         return this.catName;
     }
+    
+    /**
+     * Returns the minified string
+     * @return Minified string
+     */
     public String toStringMin(){
         return this.catNameMin;
     }
@@ -70,10 +79,18 @@ public class Category {
         return categoryID;
     }
 
+    /**
+     * Returns category's name
+     * @return Category's name
+     */
     public String getCatNameMin() {
         return catNameMin;
     }
 
+    /**
+     * Set category's minified name
+     * @param catNameMin Minified name
+     */
     public void setCatNameMin(String catNameMin) {
         this.catNameMin = catNameMin;
     }

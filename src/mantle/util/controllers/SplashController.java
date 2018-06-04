@@ -21,7 +21,7 @@ public class SplashController {
     /**
      * Displays the about window
      *
-     * @param event
+     * @param event Eventhandler :D
      */
     @FXML
     public void splashAboutButtonAction(ActionEvent event) {
@@ -32,7 +32,7 @@ public class SplashController {
      * Creates a new collection with name from the inputField
      * Right now just sets the title for the app to match the input
      *
-     * @param event
+     * @param event Eventhandler :D
      */
     @FXML
     public void splashCreateButtonAction(ActionEvent event) {
@@ -56,7 +56,7 @@ public class SplashController {
     /**
      * Closes the application
      *
-     * @param event
+     * @param event Eventhandler :D
      */
     @FXML
     public void aboutButtonClose(ActionEvent event) {

@@ -63,7 +63,11 @@ public class fileHelper {
      * @return Path of the File
      */
     public static String getPath(File file) {
-        return file.toURI().toString();
+        try {
+            return file.toURI().toString();
+        } catch (NullPointerException e){
+            return "";
+        }
     }
 
     /**

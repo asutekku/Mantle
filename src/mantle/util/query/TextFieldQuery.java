@@ -1,8 +1,10 @@
 package mantle.util.query;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
-
+/**
+ * @author akko
+ * @version 5 Apr 2018
+ *
+ */
 public class TextFieldQuery {
-
+    //Not in use
 }

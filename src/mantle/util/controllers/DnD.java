@@ -15,7 +15,7 @@ public class DnD {
      * Should return the path of the file dropped
      * Does not work :(
      *
-     * @param e
+     * @param e event :D
      * @return Path of the asset
      */
     public static String mouseDragDropped(final DragEvent e) {

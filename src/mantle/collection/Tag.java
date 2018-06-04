@@ -15,8 +15,11 @@ public class Tag implements Record{
     private String tagName;
     private static int nextValue = 0;
 
+    /**
+     * Constructor
+     */
     public Tag() {
-
+        //
     }
 
     /**
@@ -34,8 +37,8 @@ public class Tag implements Record{
      * @return The tag ID
      */
     public int register() {
-        this.tagID = this.nextValue;
-        this.nextValue++;
+        this.tagID = nextValue;
+        nextValue++;
         return this.tagID;
     }
 
@@ -43,11 +46,15 @@ public class Tag implements Record{
      * @return Tag's name
      */
     public String getTagName() {
-        return tagName;
+        if (tagName != null && !tagName.equals("")){
+            return tagName;
+        }else{
+            return "null";
+        }
     }
 
     /**
-     * @param tagName
+     * @param tagName Tag's name
      */
     public void setTagName(String tagName) {
         this.tagName = tagName;
@@ -64,7 +71,7 @@ public class Tag implements Record{
      * Set the tag ID
      * This should never be used though
      *
-     * @param tagID
+     * @param tagID Tag's ID
      */
     public void setTagID(int tagID) {
         this.tagID = tagID;
@@ -88,7 +95,7 @@ public class Tag implements Record{
     /**
      * Assign a asset ID to the tag
      *
-     * @param assetID
+     * @param assetID Asset's ID
      */
     public void setAssetID(int assetID) {
         this.assetID = assetID;
